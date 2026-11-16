@@ -1,53 +1,71 @@
+enum SubmissionStatus { submitted, underReview, reviewed }
+
+extension SubmissionStatusX on SubmissionStatus {
+  String get value {
+    switch (this) {
+      case SubmissionStatus.submitted:
+        return 'submitted';
+      case SubmissionStatus.underReview:
+        return 'under_review';
+      case SubmissionStatus.reviewed:
+        return 'reviewed';
+    }
+  }
+
+  String get label {
+    switch (this) {
+      case SubmissionStatus.submitted:
+        return 'Submitted';
+      case SubmissionStatus.underReview:
+        return 'Under review';
+      case SubmissionStatus.reviewed:
+        return 'Reviewed';
+    }
+  }
+
+  static SubmissionStatus fromValue(Object? value) {
+    switch (value) {
+      case 'submitted':
+        return SubmissionStatus.submitted;
+      case 'under_review':
+        return SubmissionStatus.underReview;
+      case 'reviewed':
+        return SubmissionStatus.reviewed;
+      default:
+        throw FormatException('Unsupported submission status: $value');
+    }
+  }
+}
+
+/// Framework-independent representation of a Talent's response to a challenge.
 class Submission {
-  final String id; // Document ID: {challengeId}_{talentId}
-  final String challengeId;
-  final String talentId;
-  final String companyId;
-  final String solutionText;
-  final List<String> attachmentUrls;
-  final String status; // 'submitted', 'under_review', 'reviewed'
-  final bool isShortlisted;
-  final DateTime submittedAt;
-  final DateTime updatedAt;
-  final DateTime? reviewedAt;
-
-  // UI helper display fields (denormalized from challenges/profiles or feedback)
-  final String? challengeTitle;
-  final String? talentName;
-  final String? talentEmail;
-  final String? feedback;
-  final int? pointsAwarded;
-
   const Submission({
     required this.id,
     required this.challengeId,
     required this.talentId,
     required this.companyId,
     required this.solutionText,
-    this.attachmentUrls = const [],
-    this.status = 'submitted',
-    this.isShortlisted = false,
+    required this.attachmentUrls,
+    required this.status,
+    required this.isShortlisted,
     required this.submittedAt,
     required this.updatedAt,
     this.reviewedAt,
-    this.challengeTitle,
-    this.talentName,
-    this.talentEmail,
-    this.feedback,
-    this.pointsAwarded,
   });
 
-  // Generates document ID per schema: {challengeId}_{talentId}
-  static String generateId(String challengeId, String talentId) {
-    return '${challengeId}_$talentId';
-  }
+  final String id;
+  final String challengeId;
+  final String talentId;
+  final String companyId;
+  final String solutionText;
+  final List<String> attachmentUrls;
+  final SubmissionStatus status;
+  final bool isShortlisted;
+  final DateTime submittedAt;
+  final DateTime updatedAt;
+  final DateTime? reviewedAt;
 
-  // UI convenience getters
-  String get description => solutionText;
-  String? get githubUrl => attachmentUrls.isNotEmpty ? attachmentUrls[0] : null;
-  String? get liveDemoUrl =>
-      attachmentUrls.length > 1 ? attachmentUrls[1] : null;
-  double? get score => pointsAwarded?.toDouble();
+  bool get canBeEdited => status == SubmissionStatus.submitted;
 
   Submission copyWith({
     String? id,
@@ -56,16 +74,12 @@ class Submission {
     String? companyId,
     String? solutionText,
     List<String>? attachmentUrls,
-    String? status,
+    SubmissionStatus? status,
     bool? isShortlisted,
     DateTime? submittedAt,
     DateTime? updatedAt,
     DateTime? reviewedAt,
-    String? challengeTitle,
-    String? talentName,
-    String? talentEmail,
-    String? feedback,
-    int? pointsAwarded,
+    bool clearReviewedAt = false,
   }) {
     return Submission(
       id: id ?? this.id,
@@ -78,12 +92,7 @@ class Submission {
       isShortlisted: isShortlisted ?? this.isShortlisted,
       submittedAt: submittedAt ?? this.submittedAt,
       updatedAt: updatedAt ?? this.updatedAt,
-      reviewedAt: reviewedAt ?? this.reviewedAt,
-      challengeTitle: challengeTitle ?? this.challengeTitle,
-      talentName: talentName ?? this.talentName,
-      talentEmail: talentEmail ?? this.talentEmail,
-      feedback: feedback ?? this.feedback,
-      pointsAwarded: pointsAwarded ?? this.pointsAwarded,
+      reviewedAt: clearReviewedAt ? null : reviewedAt ?? this.reviewedAt,
     );
   }
 }

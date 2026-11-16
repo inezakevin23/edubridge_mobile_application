@@ -1,11 +1,17 @@
 import '../repositories/submission_repository.dart';
 
 class DeleteSubmission {
-  final SubmissionRepository repository;
+  const DeleteSubmission(this._repository);
 
-  DeleteSubmission(this.repository);
+  final SubmissionRepository _repository;
 
-  Future<void> call(String submissionId) async {
-    return repository.deleteSubmission(submissionId);
+  Future<void> call({
+    required String submissionId,
+    required String talentId,
+  }) {
+    return _repository.deleteSubmission(
+      submissionId: submissionId,
+      talentId: talentId,
+    );
   }
 }

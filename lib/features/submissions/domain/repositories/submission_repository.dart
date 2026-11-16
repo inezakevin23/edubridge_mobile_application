@@ -1,26 +1,33 @@
 import '../entities/submission.dart';
 
 abstract class SubmissionRepository {
-  Future<void> submitSolution(Submission submission);
+  Stream<Submission?> watchSubmissionById(String submissionId);
 
-  Stream<List<Submission>> getSubmissionsByChallenge(String challengeId);
-
-  Stream<List<Submission>> getSubmissionsByTalent(String talentId);
-
-  Stream<List<Submission>> getSubmissionsByCompany(String companyId);
-
-  Future<Submission?> getSubmissionById(String submissionId);
-
-  Future<void> updateSubmission(Submission submission);
-
-  Future<void> updateSubmissionStatus(
-    String submissionId,
-    String status, {
-    bool? isShortlisted,
-    DateTime? reviewedAt,
-    String? feedback,
-    int? pointsAwarded,
+  Stream<Submission?> watchSubmissionForChallengeAndTalent({
+    required String challengeId,
+    required String talentId,
   });
 
-  Future<void> deleteSubmission(String submissionId);
+  Stream<List<Submission>> watchTalentSubmissions(String talentId);
+
+  Stream<List<Submission>> watchCompanySubmissions(String companyId);
+
+  Future<String> createSubmission(Submission submission);
+
+  /// A Talent may edit their solution only while its status is `submitted`.
+  Future<void> updateTalentSubmission(Submission submission);
+
+  /// Company review actions may change status and shortlist state, never the
+  /// Talent's submitted solution text or attachment URLs.
+  Future<void> updateCompanyReview({
+    required String submissionId,
+    required String companyId,
+    required SubmissionStatus status,
+    required bool isShortlisted,
+  });
+
+  Future<void> deleteSubmission({
+    required String submissionId,
+    required String talentId,
+  });
 }

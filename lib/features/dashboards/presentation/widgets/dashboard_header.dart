@@ -28,7 +28,7 @@ class DashboardHeader extends StatelessWidget implements PreferredSizeWidget {
           Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: primaryPurple.withOpacity(0.2),
+              color: primaryPurple.withValues(alpha: 0.2),
               borderRadius: BorderRadius.circular(10),
             ),
             child: const Icon(Icons.school, color: primaryPurple, size: 22),

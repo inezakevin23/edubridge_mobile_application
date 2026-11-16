@@ -1,291 +1,250 @@
+import 'dart:async';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../../data/datasources/firestore_submission_data_source.dart';
+import '../../data/repositories/submission_repository_impl.dart';
 import '../../domain/entities/submission.dart';
+import '../../domain/repositories/submission_repository.dart';
+import '../../domain/use_cases/delete_submission.dart';
+import '../../domain/use_cases/submit_solution.dart';
+import '../../domain/use_cases/update_submission_review.dart';
+import '../../domain/use_cases/update_talent_submission.dart';
+import '../../domain/use_cases/watch_company_submissions.dart';
+import '../../domain/use_cases/watch_submission.dart';
+import '../../domain/use_cases/watch_talent_submissions.dart';
 
-/// Initial realistic mock submissions matching the official EduBridge database schema
-final List<Submission> initialMockSubmissions = [
-  Submission(
-    id: 'chal_001_talent_current',
-    challengeId: 'chal_001',
-    talentId: 'talent_current',
-    companyId: 'company_uid_101',
-    challengeTitle: 'FinTech Mobile Banking Redesign',
-    talentName: 'Sarah Jenkins',
-    talentEmail: 'sarah.jenkins@edubridge.io',
-    solutionText:
-        'Redesigned the entire transaction and dashboard flow using Flutter with Clean Architecture and Riverpod. Implemented biometric lock and micro-animations.',
-    attachmentUrls: [
-      'https://github.com/sarahj/fintech-redesign',
-      'https://fintech-preview.web.app',
-    ],
-    status: 'reviewed',
-    isShortlisted: true,
-    submittedAt: DateTime.now().subtract(const Duration(days: 2)),
-    updatedAt: DateTime.now().subtract(const Duration(days: 2)),
-    reviewedAt: DateTime.now().subtract(const Duration(days: 1)),
-    feedback:
-        'Outstanding UI/UX work and clean architecture structure. Shortlisted for technical interview!',
-    pointsAwarded: 96,
-  ),
-  Submission(
-    id: 'chal_002_talent_current',
-    challengeId: 'chal_002',
-    talentId: 'talent_current',
-    companyId: 'company_uid_102',
-    challengeTitle: 'AI-Powered Resume Screener',
-    talentName: 'Sarah Jenkins',
-    talentEmail: 'sarah.jenkins@edubridge.io',
-    solutionText:
-        'Built an intelligent parsing pipeline with Gemini API that extracts candidate competencies and ranks them against job descriptions.',
-    attachmentUrls: [
-      'https://github.com/sarahj/ai-resume-screener',
-      'https://resume-screener-demo.com',
-    ],
-    status: 'under_review',
-    isShortlisted: false,
-    submittedAt: DateTime.now().subtract(const Duration(days: 4)),
-    updatedAt: DateTime.now().subtract(const Duration(days: 4)),
-  ),
-  Submission(
-    id: 'chal_003_talent_current',
-    challengeId: 'chal_003',
-    talentId: 'talent_current',
-    companyId: 'company_uid_103',
-    challengeTitle: 'E-Commerce One-Click Checkout Flow',
-    talentName: 'Sarah Jenkins',
-    talentEmail: 'sarah.jenkins@edubridge.io',
-    solutionText:
-        'Optimized cart abandonment by simplifying the checkout stepper into a single responsive sheet with Apple Pay & Google Pay support.',
-    attachmentUrls: [
-      'https://github.com/sarahj/one-click-checkout',
-    ],
-    status: 'submitted',
-    isShortlisted: false,
-    submittedAt: DateTime.now().subtract(const Duration(days: 7)),
-    updatedAt: DateTime.now().subtract(const Duration(days: 7)),
-    feedback:
-        'Very solid implementation and good test coverage. Consider caching cart states locally.',
-    pointsAwarded: 88,
-  ),
-  Submission(
-    id: 'chal_001_talent_002',
-    challengeId: 'chal_001',
-    talentId: 'talent_002',
-    companyId: 'company_uid_101',
-    challengeTitle: 'FinTech Mobile Banking Redesign',
-    talentName: 'David Kim',
-    talentEmail: 'david.kim@dev.io',
-    solutionText:
-        'Focused on accessibility and multi-currency transfers. Included dark mode and localized strings for 4 languages.',
-    attachmentUrls: [
-      'https://github.com/davidk/banking-app',
-      'https://davidk-banking.web.app',
-    ],
-    status: 'submitted',
-    isShortlisted: false,
-    submittedAt: DateTime.now().subtract(const Duration(hours: 14)),
-    updatedAt: DateTime.now().subtract(const Duration(hours: 14)),
-  ),
-  Submission(
-    id: 'chal_001_talent_003',
-    challengeId: 'chal_001',
-    talentId: 'talent_003',
-    companyId: 'company_uid_101',
-    challengeTitle: 'FinTech Mobile Banking Redesign',
-    talentName: 'Elena Rostova',
-    talentEmail: 'elena.rostova@design.co',
-    solutionText:
-        'Pixel-perfect Flutter implementation of high-fidelity Figma components with custom charts and graphs.',
-    attachmentUrls: [
-      'https://github.com/elenar/bank-ui',
-      'https://elena-bank.figma.com',
-    ],
-    status: 'reviewed',
-    isShortlisted: true,
-    submittedAt: DateTime.now().subtract(const Duration(days: 3)),
-    updatedAt: DateTime.now().subtract(const Duration(days: 3)),
-    reviewedAt: DateTime.now().subtract(const Duration(days: 1)),
-    feedback: 'Design execution is top-tier. Candidate shortlisted.',
-    pointsAwarded: 94,
-  ),
-];
-
-/// Notifier representing all submissions in memory
-class SubmissionsNotifier extends Notifier<List<Submission>> {
-  @override
-  List<Submission> build() {
-    return initialMockSubmissions;
-  }
-
-  // Add or update a submission (one submission per talent per challenge: {challengeId}_{talentId})
-  Future<bool> submitSolution(Submission submission) async {
-    final docId = submission.id.isNotEmpty
-        ? submission.id
-        : Submission.generateId(submission.challengeId, submission.talentId);
-
-    final finalSubmission = submission.copyWith(id: docId);
-
-    final existingIndex = state.indexWhere((s) => s.id == docId);
-    if (existingIndex >= 0) {
-      state = [
-        for (int i = 0; i < state.length; i++)
-          if (i == existingIndex) finalSubmission else state[i],
-      ];
-    } else {
-      state = [finalSubmission, ...state];
-    }
-    return true;
-  }
-
-  // Update submission status, feedback, points, or shortlist flag (from company review)
-  Future<bool> updateStatus(
-    String submissionId,
-    String status, {
-    bool? isShortlisted,
-    DateTime? reviewedAt,
-    String? feedback,
-    int? pointsAwarded,
-  }) async {
-    state = [
-      for (final s in state)
-        if (s.id == submissionId)
-          s.copyWith(
-            status: status,
-            isShortlisted: isShortlisted ?? s.isShortlisted,
-            reviewedAt: reviewedAt ?? (status == 'reviewed' ? DateTime.now() : s.reviewedAt),
-            feedback: feedback ?? s.feedback,
-            pointsAwarded: pointsAwarded ?? s.pointsAwarded,
-            updatedAt: DateTime.now(),
-          )
-        else
-          s,
-    ];
-    return true;
-  }
-
-  // Delete submission
-  Future<bool> delete(String submissionId) async {
-    state = state.where((s) => s.id != submissionId).toList();
-    return true;
-  }
-}
-
-/// Main notifier provider for submissions
-final submissionsNotifierProvider =
-    NotifierProvider<SubmissionsNotifier, List<Submission>>(
-  SubmissionsNotifier.new,
+final submissionFirestoreProvider = Provider<FirebaseFirestore>(
+  (ref) => FirebaseFirestore.instance,
 );
 
-/// Async state for action handling
-class ActionState {
-  final bool isLoading;
-  final String? errorMessage;
-  final bool isSuccess;
-
-  const ActionState({
-    this.isLoading = false,
-    this.errorMessage,
-    this.isSuccess = false,
-  });
-
-  ActionState copyWith({
-    bool? isLoading,
-    String? errorMessage,
-    bool? isSuccess,
-  }) {
-    return ActionState(
-      isLoading: isLoading ?? this.isLoading,
-      errorMessage: errorMessage,
-      isSuccess: isSuccess ?? this.isSuccess,
-    );
-  }
-}
-
-class SubmissionController extends Notifier<ActionState> {
-  @override
-  ActionState build() {
-    return const ActionState();
-  }
-
-  Future<bool> submit(Submission submission) async {
-    state = state.copyWith(isLoading: true, errorMessage: null, isSuccess: false);
-    try {
-      await Future.delayed(const Duration(milliseconds: 300));
-      await ref.read(submissionsNotifierProvider.notifier).submitSolution(submission);
-      state = state.copyWith(isLoading: false, isSuccess: true);
-      return true;
-    } catch (e) {
-      state = state.copyWith(isLoading: false, errorMessage: e.toString());
-      return false;
-    }
-  }
-
-  Future<bool> updateStatus(
-    String submissionId,
-    String status, {
-    bool? isShortlisted,
-    DateTime? reviewedAt,
-    String? feedback,
-    int? pointsAwarded,
-  }) async {
-    state = state.copyWith(isLoading: true, errorMessage: null, isSuccess: false);
-    try {
-      await Future.delayed(const Duration(milliseconds: 300));
-      await ref.read(submissionsNotifierProvider.notifier).updateStatus(
-            submissionId,
-            status,
-            isShortlisted: isShortlisted,
-            reviewedAt: reviewedAt,
-            feedback: feedback,
-            pointsAwarded: pointsAwarded,
-          );
-      state = state.copyWith(isLoading: false, isSuccess: true);
-      return true;
-    } catch (e) {
-      state = state.copyWith(isLoading: false, errorMessage: e.toString());
-      return false;
-    }
-  }
-
-  Future<bool> delete(String submissionId) async {
-    state = state.copyWith(isLoading: true, errorMessage: null, isSuccess: false);
-    try {
-      await ref.read(submissionsNotifierProvider.notifier).delete(submissionId);
-      state = state.copyWith(isLoading: false, isSuccess: true);
-      return true;
-    } catch (e) {
-      state = state.copyWith(isLoading: false, errorMessage: e.toString());
-      return false;
-    }
-  }
-}
-
-final submissionControllerProvider =
-    NotifierProvider<SubmissionController, ActionState>(
-  SubmissionController.new,
+final submissionFirebaseAuthProvider = Provider<FirebaseAuth>(
+  (ref) => FirebaseAuth.instance,
 );
 
-/// Provider filtering submissions by talent ID
+/// Exposes authentication changes to submission screens without depending on
+/// Member 1's not-yet-fixed auth provider name.
+final submissionAuthStateProvider = StreamProvider<User?>(
+  (ref) => ref.watch(submissionFirebaseAuthProvider).authStateChanges(),
+);
+
+final firestoreSubmissionDataSourceProvider =
+    Provider<FirestoreSubmissionDataSource>(
+  (ref) => FirestoreSubmissionDataSource(
+    ref.watch(submissionFirestoreProvider),
+  ),
+);
+
+final submissionRepositoryProvider = Provider<SubmissionRepository>(
+  (ref) => SubmissionRepositoryImpl(
+    ref.watch(firestoreSubmissionDataSourceProvider),
+  ),
+);
+
+final submitSolutionUseCaseProvider = Provider<SubmitSolution>(
+  (ref) => SubmitSolution(ref.watch(submissionRepositoryProvider)),
+);
+
+final watchSubmissionUseCaseProvider = Provider<WatchSubmission>(
+  (ref) => WatchSubmission(ref.watch(submissionRepositoryProvider)),
+);
+
+final watchSubmissionForChallengeUseCaseProvider =
+    Provider<WatchSubmissionForChallengeAndTalent>(
+  (ref) => WatchSubmissionForChallengeAndTalent(
+    ref.watch(submissionRepositoryProvider),
+  ),
+);
+
+final watchTalentSubmissionsUseCaseProvider = Provider<WatchTalentSubmissions>(
+  (ref) => WatchTalentSubmissions(ref.watch(submissionRepositoryProvider)),
+);
+
+final watchCompanySubmissionsUseCaseProvider =
+    Provider<WatchCompanySubmissions>(
+  (ref) => WatchCompanySubmissions(ref.watch(submissionRepositoryProvider)),
+);
+
+final updateTalentSubmissionUseCaseProvider = Provider<UpdateTalentSubmission>(
+  (ref) => UpdateTalentSubmission(ref.watch(submissionRepositoryProvider)),
+);
+
+final updateSubmissionReviewUseCaseProvider = Provider<UpdateSubmissionReview>(
+  (ref) => UpdateSubmissionReview(ref.watch(submissionRepositoryProvider)),
+);
+
+final deleteSubmissionUseCaseProvider = Provider<DeleteSubmission>(
+  (ref) => DeleteSubmission(ref.watch(submissionRepositoryProvider)),
+);
+
+final submissionByIdProvider =
+    StreamProvider.autoDispose.family<Submission?, String>(
+  (ref, submissionId) =>
+      ref.watch(watchSubmissionUseCaseProvider)(submissionId),
+);
+
+class SubmissionLookup {
+  const SubmissionLookup({required this.challengeId, required this.talentId});
+
+  final String challengeId;
+  final String talentId;
+
+  @override
+  bool operator ==(Object other) =>
+      other is SubmissionLookup &&
+      other.challengeId == challengeId &&
+      other.talentId == talentId;
+
+  @override
+  int get hashCode => Object.hash(challengeId, talentId);
+}
+
+final submissionForChallengeProvider =
+    StreamProvider.autoDispose.family<Submission?, SubmissionLookup>(
+  (ref, lookup) => ref.watch(watchSubmissionForChallengeUseCaseProvider)(
+    challengeId: lookup.challengeId,
+    talentId: lookup.talentId,
+  ),
+);
+
 final talentSubmissionsProvider =
-    Provider.family<List<Submission>, String>((ref, talentId) {
-  final all = ref.watch(submissionsNotifierProvider);
-  if (talentId.isEmpty || talentId == 'all') return all;
-  return all
-      .where((s) => s.talentId == talentId || s.talentId == 'talent_current')
-      .toList();
-});
+    StreamProvider.autoDispose.family<List<Submission>, String>(
+  (ref, talentId) =>
+      ref.watch(watchTalentSubmissionsUseCaseProvider)(talentId),
+);
 
-/// Provider filtering submissions by challenge ID
-final challengeSubmissionsProvider =
-    Provider.family<List<Submission>, String>((ref, challengeId) {
-  final all = ref.watch(submissionsNotifierProvider);
-  if (challengeId.isEmpty || challengeId == 'all') return all;
-  return all.where((s) => s.challengeId == challengeId).toList();
-});
-
-/// Provider filtering submissions by company ID (per schema rule)
 final companySubmissionsProvider =
-    Provider.family<List<Submission>, String>((ref, companyId) {
-  final all = ref.watch(submissionsNotifierProvider);
-  if (companyId.isEmpty || companyId == 'all') return all;
-  return all.where((s) => s.companyId == companyId).toList();
-});
+    StreamProvider.autoDispose.family<List<Submission>, String>(
+  (ref, companyId) =>
+      ref.watch(watchCompanySubmissionsUseCaseProvider)(companyId),
+);
+
+/// Centralizes submission write operations and exposes a shared loading/error
+/// state to the Talent and Company pages.
+class SubmissionActions extends AsyncNotifier<void> {
+  @override
+  FutureOr<void> build() {}
+
+  Future<String> submitSolution({
+    required String challengeId,
+    required String talentId,
+    required String companyId,
+    required String solutionText,
+    required List<String> attachmentUrls,
+  }) async {
+    state = const AsyncLoading();
+    try {
+      final now = DateTime.now();
+      final submission = Submission(
+        id: '',
+        challengeId: challengeId,
+        talentId: talentId,
+        companyId: companyId,
+        solutionText: solutionText.trim(),
+        attachmentUrls: List.unmodifiable(attachmentUrls),
+        status: SubmissionStatus.submitted,
+        isShortlisted: false,
+        submittedAt: now,
+        updatedAt: now,
+      );
+      final id = await ref.read(submitSolutionUseCaseProvider)(submission);
+      state = const AsyncData(null);
+      ref.invalidate(submissionByIdProvider(id));
+      ref.invalidate(
+        submissionForChallengeProvider(
+          SubmissionLookup(challengeId: challengeId, talentId: talentId),
+        ),
+      );
+      ref.invalidate(talentSubmissionsProvider(talentId));
+      ref.invalidate(companySubmissionsProvider(companyId));
+      return id;
+    } catch (error, stackTrace) {
+      state = AsyncError(error, stackTrace);
+      rethrow;
+    }
+  }
+
+  Future<void> updateTalentSubmission({
+    required Submission submission,
+    required String solutionText,
+    required List<String> attachmentUrls,
+  }) async {
+    state = const AsyncLoading();
+    try {
+      final updated = submission.copyWith(
+        solutionText: solutionText.trim(),
+        attachmentUrls: List.unmodifiable(attachmentUrls),
+        updatedAt: DateTime.now(),
+      );
+      await ref.read(updateTalentSubmissionUseCaseProvider)(updated);
+      state = const AsyncData(null);
+      ref.invalidate(submissionByIdProvider(submission.id));
+      ref.invalidate(
+        submissionForChallengeProvider(
+          SubmissionLookup(
+            challengeId: submission.challengeId,
+            talentId: submission.talentId,
+          ),
+        ),
+      );
+      ref.invalidate(talentSubmissionsProvider(submission.talentId));
+      ref.invalidate(companySubmissionsProvider(submission.companyId));
+    } catch (error, stackTrace) {
+      state = AsyncError(error, stackTrace);
+      rethrow;
+    }
+  }
+
+  Future<void> updateCompanyReview({
+    required Submission submission,
+    required SubmissionStatus status,
+    required bool isShortlisted,
+  }) async {
+    state = const AsyncLoading();
+    try {
+      await ref.read(updateSubmissionReviewUseCaseProvider)(
+        submissionId: submission.id,
+        companyId: submission.companyId,
+        status: status,
+        isShortlisted: isShortlisted,
+      );
+      state = const AsyncData(null);
+      ref.invalidate(submissionByIdProvider(submission.id));
+      ref.invalidate(companySubmissionsProvider(submission.companyId));
+      ref.invalidate(talentSubmissionsProvider(submission.talentId));
+    } catch (error, stackTrace) {
+      state = AsyncError(error, stackTrace);
+      rethrow;
+    }
+  }
+
+  Future<void> deleteSubmission(Submission submission) async {
+    state = const AsyncLoading();
+    try {
+      await ref.read(deleteSubmissionUseCaseProvider)(
+        submissionId: submission.id,
+        talentId: submission.talentId,
+      );
+      state = const AsyncData(null);
+      ref.invalidate(submissionByIdProvider(submission.id));
+      ref.invalidate(
+        submissionForChallengeProvider(
+          SubmissionLookup(
+            challengeId: submission.challengeId,
+            talentId: submission.talentId,
+          ),
+        ),
+      );
+      ref.invalidate(talentSubmissionsProvider(submission.talentId));
+      ref.invalidate(companySubmissionsProvider(submission.companyId));
+    } catch (error, stackTrace) {
+      state = AsyncError(error, stackTrace);
+      rethrow;
+    }
+  }
+}
+
+final submissionActionsProvider =
+    AsyncNotifierProvider<SubmissionActions, void>(SubmissionActions.new);

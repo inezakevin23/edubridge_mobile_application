@@ -2,11 +2,10 @@ import '../entities/submission.dart';
 import '../repositories/submission_repository.dart';
 
 class SubmitSolution {
-  final SubmissionRepository repository;
+  const SubmitSolution(this._repository);
 
-  SubmitSolution(this.repository);
+  final SubmissionRepository _repository;
 
-  Future<void> call(Submission submission) async {
-    return repository.submitSolution(submission);
-  }
+  Future<String> call(Submission submission) =>
+      _repository.createSubmission(submission);
 }

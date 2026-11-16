@@ -1,352 +1,301 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../../../../challenges/domain/entities/challenge.dart';
+
+import '../../../../challenges/presentation/providers/challenge_provider.dart';
 import '../../../domain/entities/submission.dart';
 import '../../providers/submission_provider.dart';
 
 class TalentSolutionPage extends ConsumerStatefulWidget {
-  final String challengeId;
-  final String challengeTitle;
-  final String companyId;
-  final Submission? initialSubmission;
+  const TalentSolutionPage({required this.challengeId, super.key});
 
-  const TalentSolutionPage({
-    super.key,
-    required this.challengeId,
-    required this.challengeTitle,
-    this.companyId = 'company_uid_101',
-    this.initialSubmission,
-  });
+  final String challengeId;
 
   @override
-  ConsumerState<TalentSolutionPage> createState() => _TalentSolutionPageState();
+  ConsumerState<TalentSolutionPage> createState() =>
+      _TalentSolutionPageState();
 }
 
 class _TalentSolutionPageState extends ConsumerState<TalentSolutionPage> {
   final _formKey = GlobalKey<FormState>();
-
-  late TextEditingController _descriptionController;
-  late TextEditingController _githubUrlController;
-  late TextEditingController _liveDemoUrlController;
-
-  static const Color bgColor = Color(0xFF0E121A);
-  static const Color cardColor = Color(0xFF1E2235);
-  static const Color borderColor = Color(0xFF2A2F45);
-  static const Color primaryPurple = Color(0xFF7C3BED);
-  static const Color textSecondary = Color(0xFF94A3B8);
-
-  @override
-  void initState() {
-    super.initState();
-    _descriptionController = TextEditingController(
-      text: widget.initialSubmission?.description ?? '',
-    );
-    _githubUrlController = TextEditingController(
-      text: widget.initialSubmission?.githubUrl ?? '',
-    );
-    _liveDemoUrlController = TextEditingController(
-      text: widget.initialSubmission?.liveDemoUrl ?? '',
-    );
-  }
+  final _solutionController = TextEditingController();
+  final _attachmentsController = TextEditingController();
+  bool _initialValuesLoaded = false;
+  bool _hasUserEdited = false;
 
   @override
   void dispose() {
-    _descriptionController.dispose();
-    _githubUrlController.dispose();
-    _liveDemoUrlController.dispose();
+    _solutionController.dispose();
+    _attachmentsController.dispose();
     super.dispose();
-  }
-
-  String? _validateUrl(String? value, {bool required = false}) {
-    if (value == null || value.trim().isEmpty) {
-      if (required) return 'This field is required';
-      return null;
-    }
-    final trimmed = value.trim();
-    final uri = Uri.tryParse(trimmed);
-    if (uri == null || (!uri.isScheme('http') && !uri.isScheme('https'))) {
-      return 'Please enter a valid URL (e.g. https://github.com/...)';
-    }
-    return null;
-  }
-
-  Future<void> _handleSubmit() async {
-    if (!_formKey.currentState!.validate()) return;
-
-    // Use current talent info or mock defaults
-    final talentId =
-        widget.initialSubmission?.talentId ?? 'talent_current';
-    final talentName =
-        widget.initialSubmission?.talentName ?? 'Sarah Jenkins';
-    final talentEmail =
-        widget.initialSubmission?.talentEmail ?? 'sarah.jenkins@edubridge.io';
-
-    final attachments = <String>[];
-    if (_githubUrlController.text.trim().isNotEmpty) {
-      attachments.add(_githubUrlController.text.trim());
-    }
-    if (_liveDemoUrlController.text.trim().isNotEmpty) {
-      attachments.add(_liveDemoUrlController.text.trim());
-    }
-
-    final submission = Submission(
-      id: widget.initialSubmission?.id ??
-          Submission.generateId(widget.challengeId, talentId),
-      challengeId: widget.challengeId,
-      challengeTitle: widget.challengeTitle,
-      companyId: widget.initialSubmission?.companyId ?? widget.companyId,
-      talentId: talentId,
-      talentName: talentName,
-      talentEmail: talentEmail,
-      solutionText: _descriptionController.text.trim(),
-      attachmentUrls: attachments,
-      status: widget.initialSubmission?.status ?? 'submitted',
-      isShortlisted: widget.initialSubmission?.isShortlisted ?? false,
-      submittedAt: widget.initialSubmission?.submittedAt ?? DateTime.now(),
-      updatedAt: DateTime.now(),
-      feedback: widget.initialSubmission?.feedback,
-      pointsAwarded: widget.initialSubmission?.pointsAwarded,
-    );
-
-    final success = await ref
-        .read(submissionControllerProvider.notifier)
-        .submit(submission);
-
-    if (mounted) {
-      if (success) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(widget.initialSubmission == null
-                ? 'Solution submitted successfully!'
-                : 'Solution updated successfully!'),
-            backgroundColor: Colors.green.shade700,
-          ),
-        );
-        Navigator.pop(context);
-      } else {
-        final error = ref.read(submissionControllerProvider).errorMessage;
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(error ?? 'Failed to submit solution'),
-            backgroundColor: Colors.redAccent,
-          ),
-        );
-      }
-    }
   }
 
   @override
   Widget build(BuildContext context) {
-    final actionState = ref.watch(submissionControllerProvider);
-    final isEditing = widget.initialSubmission != null;
+    final authAsync = ref.watch(submissionAuthStateProvider);
+    final actionsAsync = ref.watch(submissionActionsProvider);
 
     return Scaffold(
-      backgroundColor: bgColor,
-      appBar: AppBar(
-        backgroundColor: bgColor,
-        elevation: 0,
-        title: Text(
-          isEditing ? 'Edit Solution' : 'Submit Solution',
-          style: const TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-            color: Colors.white,
-          ),
+      appBar: AppBar(title: const Text('Submit your solution')),
+      body: authAsync.when(
+        loading: () => const Center(child: CircularProgressIndicator()),
+        error: (error, stackTrace) => const _PageMessage(
+          message: 'Unable to verify your account. Please try again.',
         ),
+        data: (user) {
+          if (user == null) {
+            return const _PageMessage(message: 'Please sign in to submit a solution.');
+          }
+          return _buildChallengeForm(context, user, actionsAsync.isLoading);
+        },
       ),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(20),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                // Challenge Context Card
-                Container(
-                  padding: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    color: cardColor,
-                    borderRadius: BorderRadius.circular(14),
-                    border: Border.all(color: primaryPurple.withOpacity(0.4)),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Row(
-                        children: [
-                          Icon(Icons.stars, color: primaryPurple, size: 16),
-                          SizedBox(width: 6),
-                          Text(
-                            'Target Challenge',
-                            style: TextStyle(
-                              fontSize: 12,
-                              fontWeight: FontWeight.bold,
-                              color: primaryPurple,
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 6),
-                      Text(
-                        widget.challengeTitle.isNotEmpty
-                            ? widget.challengeTitle
-                            : 'Challenge #${widget.challengeId}',
-                        style: const TextStyle(
-                          fontSize: 16,
+    );
+  }
+
+  Widget _buildChallengeForm(
+    BuildContext context,
+    User user,
+    bool isSaving,
+  ) {
+    final challengeAsync = ref.watch(challengeByIdProvider(widget.challengeId));
+    final submissionAsync = ref.watch(
+      submissionForChallengeProvider(
+        SubmissionLookup(challengeId: widget.challengeId, talentId: user.uid),
+      ),
+    );
+
+    return challengeAsync.when(
+      loading: () => const Center(child: CircularProgressIndicator()),
+      error: (error, stackTrace) => const _PageMessage(
+        message: 'Unable to load this challenge. Please try again.',
+      ),
+      data: (challenge) {
+        if (challenge == null) {
+          return const _PageMessage(message: 'This challenge could not be found.');
+        }
+
+        return submissionAsync.when(
+          loading: () => const Center(child: CircularProgressIndicator()),
+          error: (error, stackTrace) => const _PageMessage(
+            message: 'Unable to load your existing submission.',
+          ),
+          data: (existingSubmission) {
+            if (!_initialValuesLoaded && existingSubmission != null) {
+              if (!_hasUserEdited) {
+                _solutionController.text = existingSubmission.solutionText;
+                _attachmentsController.text =
+                    existingSubmission.attachmentUrls.join('\n');
+              }
+              _initialValuesLoaded = true;
+            }
+
+            final alreadyReviewed = existingSubmission != null &&
+                !existingSubmission.canBeEdited;
+            final challengeAvailable = challenge.isOpen &&
+                !challenge.isPastDeadline;
+            final canEdit = !alreadyReviewed && challengeAvailable;
+
+            return Form(
+              key: _formKey,
+              child: ListView(
+                padding: const EdgeInsets.all(20),
+                children: [
+                  Text(
+                    challenge.title,
+                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                           fontWeight: FontWeight.bold,
-                          color: Colors.white,
                         ),
-                      ),
-                    ],
                   ),
-                ),
-                const SizedBox(height: 24),
+                  const SizedBox(height: 8),
+                  Text(challenge.description),
+                  const SizedBox(height: 20),
+                  if (existingSubmission != null) ...[
+                    Text(
+                      'Submission status: ${existingSubmission.status.label}',
+                      style: Theme.of(context).textTheme.titleSmall,
+                    ),
+                    const SizedBox(height: 12),
+                  ],
+                  TextFormField(
+                    controller: _solutionController,
+                    enabled: canEdit && !isSaving,
+                    minLines: 8,
+                    maxLines: 14,
+                    textCapitalization: TextCapitalization.sentences,
+                    decoration: const InputDecoration(
+                      labelText: 'Your solution',
+                      hintText: 'Explain your approach and how it solves the challenge...',
+                      alignLabelWithHint: true,
+                      border: OutlineInputBorder(),
+                    ),
+                    onChanged: (_) {
+                      _hasUserEdited = true;
+                    },
+                    validator: (value) {
+                      final text = value?.trim() ?? '';
+                      if (text.length < 30) {
+                        return 'Please provide at least 30 characters.';
+                      }
+                      if (text.length > 10000) {
+                        return 'Your solution must be 10,000 characters or fewer.';
+                      }
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: 16),
+                  TextFormField(
+                    controller: _attachmentsController,
+                    enabled: canEdit && !isSaving,
+                    minLines: 2,
+                    maxLines: 5,
+                    keyboardType: TextInputType.url,
+                    decoration: const InputDecoration(
+                      labelText: 'Supporting links (optional)',
+                      hintText: 'Add one https:// link per line',
+                      helperText: 'For example, a project demo, repository or document link.',
+                      alignLabelWithHint: true,
+                      border: OutlineInputBorder(),
+                    ),
+                    onChanged: (_) {
+                      _hasUserEdited = true;
+                    },
+                    validator: _validateAttachmentLinks,
+                  ),
+                  const SizedBox(height: 20),
+                  if (!challengeAvailable)
+                    const _Notice(
+                      message: 'This challenge is closed or its deadline has passed. New submissions and edits are unavailable.',
+                    ),
+                  if (alreadyReviewed)
+                    const _Notice(
+                      message: 'Your solution is no longer editable because the Company has started reviewing it.',
+                    ),
+                  if (canEdit)
+                    FilledButton.icon(
+                      onPressed: isSaving ? null : () => _save(context, user, challenge, existingSubmission),
+                      icon: isSaving
+                          ? const SizedBox(
+                              width: 18,
+                              height: 18,
+                              child: CircularProgressIndicator(strokeWidth: 2),
+                            )
+                          : const Icon(Icons.send_outlined),
+                      label: Text(existingSubmission == null ? 'Submit solution' : 'Update solution'),
+                    ),
+                ],
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
 
-                // Description Field
-                const Text(
-                  'Solution Description & Approach *',
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
-                ),
-                const SizedBox(height: 8),
-                TextFormField(
-                  controller: _descriptionController,
-                  maxLines: 5,
-                  style: const TextStyle(color: Colors.white),
-                  decoration: InputDecoration(
-                    hintText:
-                        'Detail your technical approach, architecture decisions, tools used, and how you met the challenge criteria...',
-                    hintStyle:
-                        TextStyle(color: textSecondary.withOpacity(0.5)),
-                    filled: true,
-                    fillColor: cardColor,
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: const BorderSide(color: borderColor),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: const BorderSide(color: primaryPurple),
-                    ),
-                  ),
-                  validator: (value) {
-                    if (value == null || value.trim().isEmpty) {
-                      return 'Please provide a description of your solution';
-                    }
-                    if (value.trim().length < 20) {
-                      return 'Description must be at least 20 characters';
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(height: 20),
+  String? _validateAttachmentLinks(String? value) {
+    final links = (value ?? '')
+        .split('\n')
+        .map((item) => item.trim())
+        .where((item) => item.isNotEmpty);
+    for (final link in links) {
+      final uri = Uri.tryParse(link);
+      if (uri == null ||
+          !uri.hasAuthority ||
+          uri.host.isEmpty ||
+          (uri.scheme != 'https' && uri.scheme != 'http')) {
+        return 'Enter valid http or https links, one per line.';
+      }
+    }
+    return null;
+  }
 
-                // GitHub Repo URL Field
-                const Text(
-                  'GitHub Repository URL *',
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
-                ),
-                const SizedBox(height: 8),
-                TextFormField(
-                  controller: _githubUrlController,
-                  keyboardType: TextInputType.url,
-                  style: const TextStyle(color: Colors.white),
-                  decoration: InputDecoration(
-                    prefixIcon:
-                        const Icon(Icons.code, color: primaryPurple, size: 20),
-                    hintText: 'https://github.com/username/project',
-                    hintStyle:
-                        TextStyle(color: textSecondary.withOpacity(0.5)),
-                    filled: true,
-                    fillColor: cardColor,
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: const BorderSide(color: borderColor),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: const BorderSide(color: primaryPurple),
-                    ),
-                  ),
-                  validator: (val) => _validateUrl(val, required: true),
-                ),
-                const SizedBox(height: 20),
+  Future<void> _save(
+    BuildContext context,
+    User user,
+    Challenge challenge,
+    Submission? existingSubmission,
+  ) async {
+    if (!_formKey.currentState!.validate()) return;
 
-                // Live Demo URL Field
-                const Text(
-                  'Live Demo / Video Link (Optional)',
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
-                ),
-                const SizedBox(height: 8),
-                TextFormField(
-                  controller: _liveDemoUrlController,
-                  keyboardType: TextInputType.url,
-                  style: const TextStyle(color: Colors.white),
-                  decoration: InputDecoration(
-                    prefixIcon:
-                        const Icon(Icons.link, color: primaryPurple, size: 20),
-                    hintText: 'https://my-demo-app.web.app or Loom video URL',
-                    hintStyle:
-                        TextStyle(color: textSecondary.withOpacity(0.5)),
-                    filled: true,
-                    fillColor: cardColor,
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: const BorderSide(color: borderColor),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: const BorderSide(color: primaryPurple),
-                    ),
-                  ),
-                  validator: (val) => _validateUrl(val, required: false),
-                ),
-                const SizedBox(height: 32),
+    final links = _attachmentsController.text
+        .split('\n')
+        .map((item) => item.trim())
+        .where((item) => item.isNotEmpty)
+        .toList(growable: false);
 
-                // Submit Button
-                ElevatedButton(
-                  onPressed: actionState.isLoading ? null : _handleSubmit,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: primaryPurple,
-                    foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
-                  child: actionState.isLoading
-                      ? const SizedBox(
-                          height: 20,
-                          width: 20,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2,
-                            color: Colors.white,
-                          ),
-                        )
-                      : Text(
-                          isEditing ? 'Update Solution' : 'Submit Solution',
-                          style: const TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                ),
-              ],
-            ),
-          ),
+    try {
+      if (existingSubmission == null) {
+        await ref.read(submissionActionsProvider.notifier).submitSolution(
+              challengeId: widget.challengeId,
+              talentId: user.uid,
+              companyId: challenge.companyId,
+              solutionText: _solutionController.text,
+              attachmentUrls: links,
+            );
+      } else {
+        await ref.read(submissionActionsProvider.notifier).updateTalentSubmission(
+              submission: existingSubmission,
+              solutionText: _solutionController.text,
+              attachmentUrls: links,
+            );
+      }
+
+      if (!context.mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(existingSubmission == null
+              ? 'Your solution was submitted.'
+              : 'Your solution was updated.'),
         ),
+      );
+      Navigator.of(context).pop();
+    } catch (error) {
+      if (!context.mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(_friendlyError(error))),
+      );
+    }
+  }
+
+  String _friendlyError(Object error) {
+    final message = error.toString();
+    if (message.contains('already been submitted')) return 'You have already submitted a solution for this challenge.';
+    if (message.contains('closed') || message.contains('deadline')) return 'This challenge is no longer accepting submissions.';
+    if (message.contains('permission-denied')) return 'You are not allowed to perform this action.';
+    return 'We could not save your solution. Please try again.';
+  }
+}
+
+class _PageMessage extends StatelessWidget {
+  const _PageMessage({required this.message});
+
+  final String message;
+
+  @override
+  Widget build(BuildContext context) => Center(
+        child: Padding(
+          padding: const EdgeInsets.all(24),
+          child: Text(message, textAlign: TextAlign.center),
+        ),
+      );
+}
+
+class _Notice extends StatelessWidget {
+  const _Notice({required this.message});
+
+  final String message;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 16),
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.surfaceContainerHighest,
+        borderRadius: BorderRadius.circular(12),
       ),
+      child: Text(message),
     );
   }
 }

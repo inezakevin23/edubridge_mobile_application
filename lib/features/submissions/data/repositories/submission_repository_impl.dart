@@ -4,65 +4,77 @@ import '../datasources/firestore_submission_data_source.dart';
 import '../models/submission_model.dart';
 
 class SubmissionRepositoryImpl implements SubmissionRepository {
-  final SubmissionDataSource dataSource;
+  const SubmissionRepositoryImpl(this._dataSource);
 
-  SubmissionRepositoryImpl({required this.dataSource});
+  final FirestoreSubmissionDataSource _dataSource;
 
   @override
-  Future<void> submitSolution(Submission submission) async {
-    final model = submission is SubmissionModel
-        ? submission
-        : SubmissionModel.fromEntity(submission);
-    return dataSource.submitSolution(model);
+  Stream<Submission?> watchSubmissionById(String submissionId) {
+    return _dataSource
+        .watchSubmissionById(submissionId)
+        .map((model) => model?.toEntity());
   }
 
   @override
-  Stream<List<Submission>> getSubmissionsByChallenge(String challengeId) {
-    return dataSource.getSubmissionsByChallenge(challengeId);
-  }
-
-  @override
-  Stream<List<Submission>> getSubmissionsByTalent(String talentId) {
-    return dataSource.getSubmissionsByTalent(talentId);
-  }
-
-  @override
-  Stream<List<Submission>> getSubmissionsByCompany(String companyId) {
-    return dataSource.getSubmissionsByCompany(companyId);
-  }
-
-  @override
-  Future<Submission?> getSubmissionById(String submissionId) {
-    return dataSource.getSubmissionById(submissionId);
-  }
-
-  @override
-  Future<void> updateSubmission(Submission submission) async {
-    final model = submission is SubmissionModel
-        ? submission
-        : SubmissionModel.fromEntity(submission);
-    return dataSource.updateSubmission(model);
-  }
-
-  @override
-  Future<void> updateSubmissionStatus(
-    String submissionId,
-    String status, {
-    bool? isShortlisted,
-    DateTime? reviewedAt,
-    String? feedback,
-    int? pointsAwarded,
+  Stream<Submission?> watchSubmissionForChallengeAndTalent({
+    required String challengeId,
+    required String talentId,
   }) {
-    return dataSource.updateSubmissionStatus(
-      submissionId,
-      status,
+    return _dataSource
+        .watchSubmissionForChallengeAndTalent(
+          challengeId: challengeId,
+          talentId: talentId,
+        )
+        .map((model) => model?.toEntity());
+  }
+
+  @override
+  Stream<List<Submission>> watchTalentSubmissions(String talentId) {
+    return _dataSource.watchTalentSubmissions(talentId).map(
+          (models) => models.map((model) => model.toEntity()).toList(growable: false),
+        );
+  }
+
+  @override
+  Stream<List<Submission>> watchCompanySubmissions(String companyId) {
+    return _dataSource.watchCompanySubmissions(companyId).map(
+          (models) => models.map((model) => model.toEntity()).toList(growable: false),
+        );
+  }
+
+  @override
+  Future<String> createSubmission(Submission submission) {
+    return _dataSource.createSubmission(SubmissionModel.fromEntity(submission));
+  }
+
+  @override
+  Future<void> updateTalentSubmission(Submission submission) {
+    return _dataSource.updateTalentSubmission(SubmissionModel.fromEntity(submission));
+  }
+
+  @override
+  Future<void> updateCompanyReview({
+    required String submissionId,
+    required String companyId,
+    required SubmissionStatus status,
+    required bool isShortlisted,
+  }) {
+    return _dataSource.updateCompanyReview(
+      submissionId: submissionId,
+      companyId: companyId,
+      status: status.value,
       isShortlisted: isShortlisted,
-      reviewedAt: reviewedAt,
     );
   }
 
   @override
-  Future<void> deleteSubmission(String submissionId) {
-    return dataSource.deleteSubmission(submissionId);
+  Future<void> deleteSubmission({
+    required String submissionId,
+    required String talentId,
+  }) {
+    return _dataSource.deleteSubmission(
+      submissionId: submissionId,
+      talentId: talentId,
+    );
   }
 }
