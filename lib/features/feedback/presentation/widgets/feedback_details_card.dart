@@ -1,11 +1,8 @@
+import 'package:edubridge_mobile_application/features/feedback/domain/entities/submission_feedback.dart';
 import 'package:flutter/material.dart';
-import 'package:edubridge_mobile/features/feedback/domain/entities/submission_feedback.dart';
 
 class FeedbackDetailsCard extends StatelessWidget {
-  const FeedbackDetailsCard({
-    required this.feedback,
-    super.key,
-  });
+  const FeedbackDetailsCard({required this.feedback, super.key});
 
   final SubmissionFeedback feedback;
 
@@ -46,10 +43,7 @@ class FeedbackDetailsCard extends StatelessWidget {
             ),
             if (feedback.strengths.trim().isNotEmpty) ...[
               const SizedBox(height: 16),
-              _FeedbackSection(
-                title: 'Strengths',
-                content: feedback.strengths,
-              ),
+              _FeedbackSection(title: 'Strengths', content: feedback.strengths),
             ],
             if (feedback.areasForImprovement.trim().isNotEmpty) ...[
               const SizedBox(height: 16),
@@ -80,10 +74,7 @@ class FeedbackDetailsCard extends StatelessWidget {
 }
 
 class _FeedbackSection extends StatelessWidget {
-  const _FeedbackSection({
-    required this.title,
-    required this.content,
-  });
+  const _FeedbackSection({required this.title, required this.content});
 
   final String title;
   final String content;

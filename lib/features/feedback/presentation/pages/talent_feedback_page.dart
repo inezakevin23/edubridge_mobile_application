@@ -1,14 +1,11 @@
+import 'package:edubridge_mobile_application/features/feedback/presentation/providers/feedback_providers.dart';
+import 'package:edubridge_mobile_application/features/feedback/presentation/widgets/feedback_details_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:edubridge_mobile/features/feedback/presentation/providers/feedback_providers.dart';
-import 'package:edubridge_mobile/features/feedback/presentation/widgets/feedback_details_card.dart';
 
 /// Read-only feedback screen for the talent who owns the submission.
 class TalentFeedbackPage extends ConsumerWidget {
-  const TalentFeedbackPage({
-    required this.submissionId,
-    super.key,
-  });
+  const TalentFeedbackPage({required this.submissionId, super.key});
 
   final String submissionId;
 

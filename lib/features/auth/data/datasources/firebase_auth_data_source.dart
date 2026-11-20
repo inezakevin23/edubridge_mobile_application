@@ -4,25 +4,25 @@ import 'package:google_sign_in/google_sign_in.dart';
 
 class FirebaseAuthDataSource {
   FirebaseAuthDataSource({
-    required FirebaseAuth auth,
-    required FirebaseFirestore firestore,
+    required this._auth,
+    required this._firestore,
     GoogleSignIn? googleSignIn,
-  })  : _auth = auth,
-        _firestore = firestore,
-        _googleSignIn = googleSignIn ?? GoogleSignIn.instance;
+  }) : _googleSignIn = googleSignIn ?? GoogleSignIn.instance;
 
   final FirebaseAuth _auth;
   final FirebaseFirestore _firestore;
   final GoogleSignIn _googleSignIn;
 
   static Future<void>? _googleInitialization;
-  static const _googleServerClientId =
-      String.fromEnvironment('GOOGLE_SERVER_CLIENT_ID');
+  static const _googleServerClientId = String.fromEnvironment(
+    'GOOGLE_SERVER_CLIENT_ID',
+  );
 
   Future<void> _ensureGoogleInitialized() {
     return _googleInitialization ??= _googleSignIn.initialize(
-      serverClientId:
-          _googleServerClientId.isEmpty ? null : _googleServerClientId,
+      serverClientId: _googleServerClientId.isEmpty
+          ? null
+          : _googleServerClientId,
     );
   }
 
@@ -62,7 +62,7 @@ class FirebaseAuthDataSource {
         );
       }
       final credential = GoogleAuthProvider.credential(idToken: idToken);
-      return _auth.signInWithCredential(credential);
+      return await _auth.signInWithCredential(credential);
     } on GoogleSignInException catch (error) {
       if (error.code == GoogleSignInExceptionCode.canceled) {
         throw FirebaseAuthException(
@@ -122,8 +122,8 @@ class FirebaseAuthDataSource {
       final resolvedName = displayName.trim().isNotEmpty
           ? displayName.trim()
           : (user.displayName?.trim().isNotEmpty == true
-              ? user.displayName!.trim()
-              : (user.email?.split('@').first ?? 'EduBridge user'));
+                ? user.displayName!.trim()
+                : (user.email?.split('@').first ?? 'EduBridge user'));
 
       if (!profileSnapshot.exists) {
         transaction.set(profileRef, {
@@ -167,8 +167,12 @@ class FirebaseAuthDataSource {
     if (user == null) throw StateError('No signed-in account was found.');
     await user.reload();
     final refreshedUser = _auth.currentUser;
-    if (refreshedUser == null) throw StateError('Please sign in again.');
-    if (!refreshedUser.emailVerified) await refreshedUser.sendEmailVerification();
+    if (refreshedUser == null) {
+      throw StateError('Please sign in again.');
+    }
+    if (!refreshedUser.emailVerified) {
+      await refreshedUser.sendEmailVerification();
+    }
   }
 
   Future<bool> reloadCurrentUser() async {

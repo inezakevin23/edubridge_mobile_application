@@ -1,7 +1,7 @@
-import 'package:edubridge_mobile/features/feedback/data/datasources/firestore_feedback_data_source.dart';
-import 'package:edubridge_mobile/features/feedback/data/models/submission_feedback_model.dart';
-import 'package:edubridge_mobile/features/feedback/domain/entities/submission_feedback.dart';
-import 'package:edubridge_mobile/features/feedback/domain/repositories/feedback_repository.dart';
+import 'package:edubridge_mobile_application/features/feedback/data/datasources/firestore_feedback_data_source.dart';
+import 'package:edubridge_mobile_application/features/feedback/data/models/submission_feedback_model.dart';
+import 'package:edubridge_mobile_application/features/feedback/domain/entities/submission_feedback.dart';
+import 'package:edubridge_mobile_application/features/feedback/domain/repositories/feedback_repository.dart';
 
 class FeedbackRepositoryImpl implements FeedbackRepository {
   const FeedbackRepositoryImpl(this._dataSource);

@@ -1,9 +1,9 @@
+import 'package:edubridge_mobile_application/features/auth/presentation/providers/auth_providers.dart';
+import 'package:edubridge_mobile_application/features/feedback/domain/entities/submission_feedback.dart';
+import 'package:edubridge_mobile_application/features/feedback/presentation/providers/feedback_providers.dart';
+import 'package:edubridge_mobile_application/features/feedback/presentation/widgets/feedback_rating_input.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:edubridge_mobile/features/auth/presentation/providers/auth_providers.dart';
-import 'package:edubridge_mobile/features/feedback/domain/entities/submission_feedback.dart';
-import 'package:edubridge_mobile/features/feedback/presentation/providers/feedback_providers.dart';
-import 'package:edubridge_mobile/features/feedback/presentation/widgets/feedback_rating_input.dart';
 
 /// Open this page from the company submission-details/review screen.
 /// The IDs must come from the submission document, not from form input.
@@ -81,8 +81,9 @@ class _CompanyFeedbackFormState extends ConsumerState<_CompanyFeedbackForm> {
     super.initState();
     final feedback = widget.existingFeedback;
     _summaryController = TextEditingController(text: feedback?.summary ?? '');
-    _strengthsController =
-        TextEditingController(text: feedback?.strengths ?? '');
+    _strengthsController = TextEditingController(
+      text: feedback?.strengths ?? '',
+    );
     _improvementsController = TextEditingController(
       text: feedback?.areasForImprovement ?? '',
     );
@@ -130,7 +131,8 @@ class _CompanyFeedbackFormState extends ConsumerState<_CompanyFeedbackForm> {
               maxLength: 1000,
               decoration: const InputDecoration(
                 labelText: 'Overall feedback',
-                hintText: 'Explain how well the solution addressed the challenge.',
+                hintText:
+                    'Explain how well the solution addressed the challenge.',
                 border: OutlineInputBorder(),
                 alignLabelWithHint: true,
               ),
@@ -174,7 +176,8 @@ class _CompanyFeedbackFormState extends ConsumerState<_CompanyFeedbackForm> {
               decoration: const InputDecoration(
                 labelText: 'Points awarded (0–100)',
                 border: OutlineInputBorder(),
-                helperText: 'Award points based on the quality of the submission.',
+                helperText:
+                    'Award points based on the quality of the submission.',
               ),
               validator: (value) {
                 final points = int.tryParse((value ?? '').trim());
@@ -237,9 +240,8 @@ class _CompanyFeedbackFormState extends ConsumerState<_CompanyFeedbackForm> {
   }
 
   void _showMessage(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(message)),
-    );
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text(message)));
   }
 }
 

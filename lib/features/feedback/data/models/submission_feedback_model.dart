@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:edubridge_mobile/features/feedback/domain/entities/submission_feedback.dart';
+import 'package:edubridge_mobile_application/features/feedback/domain/entities/submission_feedback.dart';
 
 class SubmissionFeedbackModel extends SubmissionFeedback {
   const SubmissionFeedbackModel({
@@ -33,8 +33,7 @@ class SubmissionFeedbackModel extends SubmissionFeedback {
       pointsAwarded: (data['pointsAwarded'] as num?)?.toInt() ?? 0,
       summary: (data['summary'] as String?) ?? '',
       strengths: (data['strengths'] as String?) ?? '',
-      areasForImprovement:
-          (data['areasForImprovement'] as String?) ?? '',
+      areasForImprovement: (data['areasForImprovement'] as String?) ?? '',
       createdAt: _readDate(data['createdAt']),
       updatedAt: _readDate(data['updatedAt']),
     );
