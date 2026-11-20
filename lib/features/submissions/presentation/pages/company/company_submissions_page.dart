@@ -23,14 +23,19 @@ class CompanySubmissionsPage extends ConsumerWidget {
         ),
         data: (user) {
           if (user == null) {
-            return const _CompanyMessage(message: 'Please sign in to view submissions.');
+            return const _CompanyMessage(
+              message: 'Please sign in to view submissions.',
+            );
           }
-          final submissionsAsync = ref.watch(companySubmissionsProvider(user.uid));
+          final submissionsAsync = ref.watch(
+            companySubmissionsProvider(user.uid),
+          );
           return submissionsAsync.when(
             loading: () => const Center(child: CircularProgressIndicator()),
             error: (error, stackTrace) => _CompanyMessage(
               message: 'Unable to load submissions for your challenges.',
-              onRetry: () => ref.invalidate(companySubmissionsProvider(user.uid)),
+              onRetry: () =>
+                  ref.invalidate(companySubmissionsProvider(user.uid)),
             ),
             data: (submissions) {
               if (submissions.isEmpty) {
@@ -40,15 +45,18 @@ class CompanySubmissionsPage extends ConsumerWidget {
                 );
               }
               return RefreshIndicator(
-                onRefresh: () async => ref.invalidate(companySubmissionsProvider(user.uid)),
+                onRefresh: () async =>
+                    ref.invalidate(companySubmissionsProvider(user.uid)),
                 child: ListView.separated(
                   physics: const AlwaysScrollableScrollPhysics(),
                   padding: const EdgeInsets.all(16),
                   itemCount: submissions.length,
-                  separatorBuilder: (context, index) => const SizedBox(height: 8),
+                  separatorBuilder: (context, index) =>
+                      const SizedBox(height: 8),
                   itemBuilder: (context, index) => _CompanySubmissionTile(
                     submission: submissions[index],
-                    onTap: () => context.push('/submissions/${submissions[index].id}'),
+                    onTap: () =>
+                        context.push('/submissions/${submissions[index].id}'),
                   ),
                 ),
               );
@@ -68,10 +76,17 @@ class _CompanySubmissionTile extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final challengeAsync = ref.watch(challengeByIdProvider(submission.challengeId));
+    final challengeAsync = ref.watch(
+      challengeByIdProvider(submission.challengeId),
+    );
     return SubmissionCard(
       submission: submission,
-      challengeTitle: challengeAsync.maybeWhen(data: (challenge) => challenge?.title, orElse: () => null) ?? 'Challenge ${submission.challengeId}',
+      challengeTitle:
+          challengeAsync.maybeWhen(
+            data: (challenge) => challenge?.title,
+            orElse: () => null,
+          ) ??
+          'Challenge ${submission.challengeId}',
       onTap: onTap,
     );
   }
@@ -90,18 +105,18 @@ class _CompanyMessage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Center(
-        child: Padding(
-          padding: const EdgeInsets.all(28),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(icon, size: 44, color: Theme.of(context).colorScheme.secondary),
-              const SizedBox(height: 12),
-              Text(message, textAlign: TextAlign.center),
-              if (onRetry != null)
-                TextButton(onPressed: onRetry, child: const Text('Try again')),
-            ],
-          ),
-        ),
-      );
+    child: Padding(
+      padding: const EdgeInsets.all(28),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, size: 44, color: Theme.of(context).colorScheme.secondary),
+          const SizedBox(height: 12),
+          Text(message, textAlign: TextAlign.center),
+          if (onRetry != null)
+            TextButton(onPressed: onRetry, child: const Text('Try again')),
+        ],
+      ),
+    ),
+  );
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../challenges/presentation/providers/challenge_provider.dart';
 import '../../../../submissions/domain/entities/submission.dart';
 import '../../../../submissions/presentation/providers/submission_provider.dart';
 import '../../../../submissions/presentation/widgets/submission_card.dart';
@@ -22,16 +23,22 @@ class TalentDashboardPage extends ConsumerWidget {
         ),
         data: (user) {
           if (user == null) {
-            return const _DashboardMessage(message: 'Please sign in to continue.');
+            return const _DashboardMessage(
+              message: 'Please sign in to continue.',
+            );
           }
-          final submissionsAsync = ref.watch(talentSubmissionsProvider(user.uid));
+          final submissionsAsync = ref.watch(
+            talentSubmissionsProvider(user.uid),
+          );
           return submissionsAsync.when(
             loading: () => const Center(child: CircularProgressIndicator()),
             error: (error, stackTrace) => _DashboardMessage(
               message: 'Unable to load your dashboard.',
-              onRetry: () => ref.invalidate(talentSubmissionsProvider(user.uid)),
+              onRetry: () =>
+                  ref.invalidate(talentSubmissionsProvider(user.uid)),
             ),
-            data: (submissions) => _buildDashboard(context, ref, user.uid, submissions),
+            data: (submissions) =>
+                _buildDashboard(context, ref, user.uid, submissions),
           );
         },
       ),
@@ -54,18 +61,20 @@ class TalentDashboardPage extends ConsumerWidget {
         .where((item) => item.status == SubmissionStatus.reviewed)
         .length;
     final shortlisted = submissions.where((item) => item.isShortlisted).length;
+    final isLandscape =
+        MediaQuery.orientationOf(context) == Orientation.landscape;
 
     return RefreshIndicator(
-      onRefresh: () async => ref.invalidate(talentSubmissionsProvider(talentId)),
+      onRefresh: () async =>
+          ref.invalidate(talentSubmissionsProvider(talentId)),
       child: ListView(
         physics: const AlwaysScrollableScrollPhysics(),
         padding: const EdgeInsets.all(16),
         children: [
           Text(
             'Turn your skills into practical experience.',
-            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
+            style: Theme.of(context).textTheme.headlineSmall
+                ?.copyWith(fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 8),
           Text(
@@ -88,21 +97,40 @@ class TalentDashboardPage extends ConsumerWidget {
           Text('Your progress', style: Theme.of(context).textTheme.titleLarge),
           const SizedBox(height: 12),
           GridView.count(
-            crossAxisCount: 2,
+            crossAxisCount: isLandscape ? 4 : 2,
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
             crossAxisSpacing: 10,
             mainAxisSpacing: 10,
-            childAspectRatio: 1.9,
+            childAspectRatio: isLandscape ? 2.4 : 1.9,
             children: [
-              _ProgressCard(label: 'Submitted', value: submitted, icon: Icons.send_outlined),
-              _ProgressCard(label: 'Under review', value: inReview, icon: Icons.rate_review_outlined),
-              _ProgressCard(label: 'Reviewed', value: reviewed, icon: Icons.done_all),
-              _ProgressCard(label: 'Shortlisted', value: shortlisted, icon: Icons.star_outline),
+              _ProgressCard(
+                label: 'Submitted',
+                value: submitted,
+                icon: Icons.send_outlined,
+              ),
+              _ProgressCard(
+                label: 'Under review',
+                value: inReview,
+                icon: Icons.rate_review_outlined,
+              ),
+              _ProgressCard(
+                label: 'Reviewed',
+                value: reviewed,
+                icon: Icons.done_all,
+              ),
+              _ProgressCard(
+                label: 'Shortlisted',
+                value: shortlisted,
+                icon: Icons.star_outline,
+              ),
             ],
           ),
           const SizedBox(height: 24),
-          Text('Recent submissions', style: Theme.of(context).textTheme.titleLarge),
+          Text(
+            'Recent submissions',
+            style: Theme.of(context).textTheme.titleLarge,
+          ),
           const SizedBox(height: 12),
           if (submissions.isEmpty)
             const Padding(
@@ -113,13 +141,40 @@ class TalentDashboardPage extends ConsumerWidget {
               ),
             )
           else
-            ...submissions.take(3).map(
-                  (submission) => SubmissionCard(
-                    submission: submission,
-                    onTap: () => context.push('/submissions/${submission.id}'),
-                  ),
+            ...submissions
+                .take(3)
+                .map(
+                  (submission) =>
+                      _TalentDashboardSubmissionTile(submission: submission),
                 ),
         ],
+      ),
+    );
+  }
+}
+
+class _TalentDashboardSubmissionTile extends ConsumerWidget {
+  const _TalentDashboardSubmissionTile({required this.submission});
+
+  final Submission submission;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final challengeAsync = ref.watch(
+      challengeByIdProvider(submission.challengeId),
+    );
+    final title =
+        challengeAsync.maybeWhen(
+          data: (challenge) => challenge?.title,
+          orElse: () => null,
+        ) ??
+        'Challenge submission';
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8),
+      child: SubmissionCard(
+        submission: submission,
+        challengeTitle: title,
+        onTap: () => context.push('/submissions/${submission.id}'),
       ),
     );
   }
@@ -152,9 +207,8 @@ class _ProgressCard extends StatelessWidget {
                 children: [
                   Text(
                     value.toString(),
-                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
+                    style: Theme.of(context).textTheme.titleLarge
+                        ?.copyWith(fontWeight: FontWeight.bold),
                   ),
                   Text(label, style: Theme.of(context).textTheme.labelMedium),
                 ],
@@ -175,16 +229,16 @@ class _DashboardMessage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Center(
-        child: Padding(
-          padding: const EdgeInsets.all(24),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(message, textAlign: TextAlign.center),
-              if (onRetry != null)
-                TextButton(onPressed: onRetry, child: const Text('Try again')),
-            ],
-          ),
-        ),
-      );
+    child: Padding(
+      padding: const EdgeInsets.all(24),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(message, textAlign: TextAlign.center),
+          if (onRetry != null)
+            TextButton(onPressed: onRetry, child: const Text('Try again')),
+        ],
+      ),
+    ),
+  );
 }

@@ -25,9 +25,13 @@ class SubmissionDetailPage extends ConsumerWidget {
         ),
         data: (user) {
           if (user == null) {
-            return const _DetailMessage(message: 'Please sign in to view this submission.');
+            return const _DetailMessage(
+              message: 'Please sign in to view this submission.',
+            );
           }
-          final submissionAsync = ref.watch(submissionByIdProvider(submissionId));
+          final submissionAsync = ref.watch(
+            submissionByIdProvider(submissionId),
+          );
           return submissionAsync.when(
             loading: () => const Center(child: CircularProgressIndicator()),
             error: (error, stackTrace) => const _DetailMessage(
@@ -35,7 +39,9 @@ class SubmissionDetailPage extends ConsumerWidget {
             ),
             data: (submission) {
               if (submission == null) {
-                return const _DetailMessage(message: 'This submission could not be found.');
+                return const _DetailMessage(
+                  message: 'This submission could not be found.',
+                );
               }
               final isTalent = user.uid == submission.talentId;
               final isCompany = user.uid == submission.companyId;
@@ -70,7 +76,9 @@ class _SubmissionContent extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final challengeAsync = ref.watch(challengeByIdProvider(submission.challengeId));
+    final challengeAsync = ref.watch(
+      challengeByIdProvider(submission.challengeId),
+    );
     final actionsAsync = ref.watch(submissionActionsProvider);
 
     return ListView(
@@ -81,9 +89,8 @@ class _SubmissionContent extends ConsumerWidget {
             data: (challenge) => challenge?.title ?? 'Challenge submission',
             orElse: () => 'Challenge submission',
           ),
-          style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+          style: Theme.of(context).textTheme.headlineSmall
+              ?.copyWith(fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 12),
         Wrap(
@@ -92,11 +99,17 @@ class _SubmissionContent extends ConsumerWidget {
           children: [
             SubmissionStatusChip(status: submission.status),
             if (submission.isShortlisted)
-              const Chip(avatar: Icon(Icons.star, size: 16), label: Text('Shortlisted')),
+              const Chip(
+                avatar: Icon(Icons.star, size: 16),
+                label: Text('Shortlisted'),
+              ),
           ],
         ),
         const SizedBox(height: 20),
-        Text('Submitted solution', style: Theme.of(context).textTheme.titleMedium),
+        Text(
+          'Submitted solution',
+          style: Theme.of(context).textTheme.titleMedium,
+        ),
         const SizedBox(height: 8),
         Card(
           child: Padding(
@@ -106,7 +119,10 @@ class _SubmissionContent extends ConsumerWidget {
         ),
         if (submission.attachmentUrls.isNotEmpty) ...[
           const SizedBox(height: 16),
-          Text('Supporting links', style: Theme.of(context).textTheme.titleMedium),
+          Text(
+            'Supporting links',
+            style: Theme.of(context).textTheme.titleMedium,
+          ),
           const SizedBox(height: 8),
           ...submission.attachmentUrls.map(
             (url) => ListTile(
@@ -121,16 +137,14 @@ class _SubmissionContent extends ConsumerWidget {
         _MetadataRow(label: 'Challenge ID', value: submission.challengeId),
         _MetadataRow(
           label: 'Submitted',
-          value: MaterialLocalizations.of(context).formatMediumDate(
-            submission.submittedAt.toLocal(),
-          ),
+          value: MaterialLocalizations.of(context)
+              .formatMediumDate(submission.submittedAt.toLocal()),
         ),
         if (submission.reviewedAt != null)
           _MetadataRow(
             label: 'Reviewed',
-            value: MaterialLocalizations.of(context).formatMediumDate(
-              submission.reviewedAt!.toLocal(),
-            ),
+            value: MaterialLocalizations.of(context)
+                .formatMediumDate(submission.reviewedAt!.toLocal()),
           ),
         const SizedBox(height: 24),
         if (isCompany) ...[
@@ -141,11 +155,11 @@ class _SubmissionContent extends ConsumerWidget {
               onPressed: actionsAsync.isLoading
                   ? null
                   : () => _runAction(
-                        context,
-                        ref,
-                        status: SubmissionStatus.underReview,
-                        isShortlisted: submission.isShortlisted,
-                      ),
+                      context,
+                      ref,
+                      status: SubmissionStatus.underReview,
+                      isShortlisted: submission.isShortlisted,
+                    ),
               icon: const Icon(Icons.rate_review_outlined),
               label: const Text('Start reviewing'),
             ),
@@ -155,11 +169,11 @@ class _SubmissionContent extends ConsumerWidget {
               onPressed: actionsAsync.isLoading
                   ? null
                   : () => _runAction(
-                        context,
-                        ref,
-                        status: SubmissionStatus.reviewed,
-                        isShortlisted: submission.isShortlisted,
-                      ),
+                      context,
+                      ref,
+                      status: SubmissionStatus.reviewed,
+                      isShortlisted: submission.isShortlisted,
+                    ),
               icon: const Icon(Icons.done_all),
               label: const Text('Mark as reviewed'),
             ),
@@ -168,13 +182,19 @@ class _SubmissionContent extends ConsumerWidget {
               onPressed: actionsAsync.isLoading
                   ? null
                   : () => _runAction(
-                        context,
-                        ref,
-                        status: submission.status,
-                        isShortlisted: !submission.isShortlisted,
-                      ),
-              icon: Icon(submission.isShortlisted ? Icons.star_border : Icons.star),
-              label: Text(submission.isShortlisted ? 'Remove shortlist' : 'Shortlist talent'),
+                      context,
+                      ref,
+                      status: submission.status,
+                      isShortlisted: !submission.isShortlisted,
+                    ),
+              icon: Icon(
+                submission.isShortlisted ? Icons.star_border : Icons.star,
+              ),
+              label: Text(
+                submission.isShortlisted
+                    ? 'Remove shortlist'
+                    : 'Shortlist talent',
+              ),
             ),
           const SizedBox(height: 8),
           const Text(
@@ -183,7 +203,10 @@ class _SubmissionContent extends ConsumerWidget {
           ),
         ],
         if (isTalent) ...[
-          Text('Your submission', style: Theme.of(context).textTheme.titleLarge),
+          Text(
+            'Your submission',
+            style: Theme.of(context).textTheme.titleLarge,
+          ),
           const SizedBox(height: 8),
           Text(
             submission.canBeEdited
@@ -201,7 +224,8 @@ class _SubmissionContent extends ConsumerWidget {
           if (submission.canBeEdited) ...[
             const SizedBox(height: 12),
             FilledButton.icon(
-              onPressed: () => context.push('/talent/solution/${submission.challengeId}'),
+              onPressed: () =>
+                  context.push('/talent/solution/${submission.challengeId}'),
               icon: const Icon(Icons.edit_outlined),
               label: const Text('Edit solution'),
             ),
@@ -225,7 +249,9 @@ class _SubmissionContent extends ConsumerWidget {
     required bool isShortlisted,
   }) async {
     try {
-      await ref.read(submissionActionsProvider.notifier).updateCompanyReview(
+      await ref
+          .read(submissionActionsProvider.notifier)
+          .updateCompanyReview(
             submission: submission,
             status: status,
             isShortlisted: isShortlisted,
@@ -237,7 +263,9 @@ class _SubmissionContent extends ConsumerWidget {
     } catch (error) {
       if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Could not update the review. Please try again.')),
+        const SnackBar(
+          content: Text('Could not update the review. Please try again.'),
+        ),
       );
     }
   }
@@ -247,7 +275,9 @@ class _SubmissionContent extends ConsumerWidget {
       context: context,
       builder: (dialogContext) => AlertDialog(
         title: const Text('Withdraw solution?'),
-        content: const Text('This will remove your submission from the challenge. You cannot undo this action.'),
+        content: const Text(
+          'This will remove your submission from the challenge. You cannot undo this action.',
+        ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(dialogContext, false),
@@ -263,7 +293,9 @@ class _SubmissionContent extends ConsumerWidget {
     if (confirmed != true) return;
 
     try {
-      await ref.read(submissionActionsProvider.notifier).deleteSubmission(submission);
+      await ref
+          .read(submissionActionsProvider.notifier)
+          .deleteSubmission(submission);
       if (!context.mounted) return;
       Navigator.of(context).pop();
       ScaffoldMessenger.of(context).showSnackBar(
@@ -272,7 +304,9 @@ class _SubmissionContent extends ConsumerWidget {
     } catch (error) {
       if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('This submission can no longer be withdrawn.')),
+        const SnackBar(
+          content: Text('This submission can no longer be withdrawn.'),
+        ),
       );
     }
   }
@@ -286,18 +320,18 @@ class _MetadataRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Padding(
-        padding: const EdgeInsets.symmetric(vertical: 4),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(
-              width: 104,
-              child: Text(label, style: Theme.of(context).textTheme.labelMedium),
-            ),
-            Expanded(child: SelectableText(value)),
-          ],
+    padding: const EdgeInsets.symmetric(vertical: 4),
+    child: Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SizedBox(
+          width: 104,
+          child: Text(label, style: Theme.of(context).textTheme.labelMedium),
         ),
-      );
+        Expanded(child: SelectableText(value)),
+      ],
+    ),
+  );
 }
 
 class _DetailMessage extends StatelessWidget {
@@ -307,9 +341,9 @@ class _DetailMessage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Center(
-        child: Padding(
-          padding: const EdgeInsets.all(24),
-          child: Text(message, textAlign: TextAlign.center),
-        ),
-      );
+    child: Padding(
+      padding: const EdgeInsets.all(24),
+      child: Text(message, textAlign: TextAlign.center),
+    ),
+  );
 }

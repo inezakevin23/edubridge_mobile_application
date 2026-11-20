@@ -30,15 +30,21 @@ class SubmissionRepositoryImpl implements SubmissionRepository {
 
   @override
   Stream<List<Submission>> watchTalentSubmissions(String talentId) {
-    return _dataSource.watchTalentSubmissions(talentId).map(
-          (models) => models.map((model) => model.toEntity()).toList(growable: false),
+    return _dataSource
+        .watchTalentSubmissions(talentId)
+        .map(
+          (models) =>
+              models.map((model) => model.toEntity()).toList(growable: false),
         );
   }
 
   @override
   Stream<List<Submission>> watchCompanySubmissions(String companyId) {
-    return _dataSource.watchCompanySubmissions(companyId).map(
-          (models) => models.map((model) => model.toEntity()).toList(growable: false),
+    return _dataSource
+        .watchCompanySubmissions(companyId)
+        .map(
+          (models) =>
+              models.map((model) => model.toEntity()).toList(growable: false),
         );
   }
 
@@ -49,7 +55,9 @@ class SubmissionRepositoryImpl implements SubmissionRepository {
 
   @override
   Future<void> updateTalentSubmission(Submission submission) {
-    return _dataSource.updateTalentSubmission(SubmissionModel.fromEntity(submission));
+    return _dataSource.updateTalentSubmission(
+      SubmissionModel.fromEntity(submission),
+    );
   }
 
   @override

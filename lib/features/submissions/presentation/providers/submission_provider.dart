@@ -32,10 +32,9 @@ final submissionAuthStateProvider = StreamProvider<User?>(
 
 final firestoreSubmissionDataSourceProvider =
     Provider<FirestoreSubmissionDataSource>(
-  (ref) => FirestoreSubmissionDataSource(
-    ref.watch(submissionFirestoreProvider),
-  ),
-);
+      (ref) =>
+          FirestoreSubmissionDataSource(ref.watch(submissionFirestoreProvider)),
+    );
 
 final submissionRepositoryProvider = Provider<SubmissionRepository>(
   (ref) => SubmissionRepositoryImpl(
@@ -53,10 +52,10 @@ final watchSubmissionUseCaseProvider = Provider<WatchSubmission>(
 
 final watchSubmissionForChallengeUseCaseProvider =
     Provider<WatchSubmissionForChallengeAndTalent>(
-  (ref) => WatchSubmissionForChallengeAndTalent(
-    ref.watch(submissionRepositoryProvider),
-  ),
-);
+      (ref) => WatchSubmissionForChallengeAndTalent(
+        ref.watch(submissionRepositoryProvider),
+      ),
+    );
 
 final watchTalentSubmissionsUseCaseProvider = Provider<WatchTalentSubmissions>(
   (ref) => WatchTalentSubmissions(ref.watch(submissionRepositoryProvider)),
@@ -64,8 +63,8 @@ final watchTalentSubmissionsUseCaseProvider = Provider<WatchTalentSubmissions>(
 
 final watchCompanySubmissionsUseCaseProvider =
     Provider<WatchCompanySubmissions>(
-  (ref) => WatchCompanySubmissions(ref.watch(submissionRepositoryProvider)),
-);
+      (ref) => WatchCompanySubmissions(ref.watch(submissionRepositoryProvider)),
+    );
 
 final updateTalentSubmissionUseCaseProvider = Provider<UpdateTalentSubmission>(
   (ref) => UpdateTalentSubmission(ref.watch(submissionRepositoryProvider)),
@@ -79,11 +78,11 @@ final deleteSubmissionUseCaseProvider = Provider<DeleteSubmission>(
   (ref) => DeleteSubmission(ref.watch(submissionRepositoryProvider)),
 );
 
-final submissionByIdProvider =
-    StreamProvider.autoDispose.family<Submission?, String>(
-  (ref, submissionId) =>
-      ref.watch(watchSubmissionUseCaseProvider)(submissionId),
-);
+final submissionByIdProvider = StreamProvider.autoDispose
+    .family<Submission?, String>(
+      (ref, submissionId) =>
+          ref.watch(watchSubmissionUseCaseProvider)(submissionId),
+    );
 
 class SubmissionLookup {
   const SubmissionLookup({required this.challengeId, required this.talentId});
@@ -101,25 +100,25 @@ class SubmissionLookup {
   int get hashCode => Object.hash(challengeId, talentId);
 }
 
-final submissionForChallengeProvider =
-    StreamProvider.autoDispose.family<Submission?, SubmissionLookup>(
-  (ref, lookup) => ref.watch(watchSubmissionForChallengeUseCaseProvider)(
-    challengeId: lookup.challengeId,
-    talentId: lookup.talentId,
-  ),
-);
+final submissionForChallengeProvider = StreamProvider.autoDispose
+    .family<Submission?, SubmissionLookup>(
+      (ref, lookup) => ref.watch(watchSubmissionForChallengeUseCaseProvider)(
+        challengeId: lookup.challengeId,
+        talentId: lookup.talentId,
+      ),
+    );
 
-final talentSubmissionsProvider =
-    StreamProvider.autoDispose.family<List<Submission>, String>(
-  (ref, talentId) =>
-      ref.watch(watchTalentSubmissionsUseCaseProvider)(talentId),
-);
+final talentSubmissionsProvider = StreamProvider.autoDispose
+    .family<List<Submission>, String>(
+      (ref, talentId) =>
+          ref.watch(watchTalentSubmissionsUseCaseProvider)(talentId),
+    );
 
-final companySubmissionsProvider =
-    StreamProvider.autoDispose.family<List<Submission>, String>(
-  (ref, companyId) =>
-      ref.watch(watchCompanySubmissionsUseCaseProvider)(companyId),
-);
+final companySubmissionsProvider = StreamProvider.autoDispose
+    .family<List<Submission>, String>(
+      (ref, companyId) =>
+          ref.watch(watchCompanySubmissionsUseCaseProvider)(companyId),
+    );
 
 /// Centralizes submission write operations and exposes a shared loading/error
 /// state to the Talent and Company pages.

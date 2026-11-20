@@ -17,9 +17,8 @@ class SubmissionCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final date = MaterialLocalizations.of(context).formatMediumDate(
-      submission.submittedAt.toLocal(),
-    );
+    final date = MaterialLocalizations.of(context)
+        .formatMediumDate(submission.submittedAt.toLocal());
 
     return Card(
       clipBehavior: Clip.antiAlias,
@@ -36,9 +35,8 @@ class SubmissionCard extends StatelessWidget {
                   Expanded(
                     child: Text(
                       challengeTitle ?? 'Challenge submission',
-                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                            fontWeight: FontWeight.w700,
-                          ),
+                      style: Theme.of(context).textTheme.titleMedium
+                          ?.copyWith(fontWeight: FontWeight.w700),
                     ),
                   ),
                   const SizedBox(width: 8),

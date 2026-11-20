@@ -14,8 +14,7 @@ class TalentSolutionPage extends ConsumerStatefulWidget {
   final String challengeId;
 
   @override
-  ConsumerState<TalentSolutionPage> createState() =>
-      _TalentSolutionPageState();
+  ConsumerState<TalentSolutionPage> createState() => _TalentSolutionPageState();
 }
 
 class _TalentSolutionPageState extends ConsumerState<TalentSolutionPage> {
@@ -46,7 +45,9 @@ class _TalentSolutionPageState extends ConsumerState<TalentSolutionPage> {
         ),
         data: (user) {
           if (user == null) {
-            return const _PageMessage(message: 'Please sign in to submit a solution.');
+            return const _PageMessage(
+              message: 'Please sign in to submit a solution.',
+            );
           }
           return _buildChallengeForm(context, user, actionsAsync.isLoading);
         },
@@ -54,11 +55,7 @@ class _TalentSolutionPageState extends ConsumerState<TalentSolutionPage> {
     );
   }
 
-  Widget _buildChallengeForm(
-    BuildContext context,
-    User user,
-    bool isSaving,
-  ) {
+  Widget _buildChallengeForm(BuildContext context, User user, bool isSaving) {
     final challengeAsync = ref.watch(challengeByIdProvider(widget.challengeId));
     final submissionAsync = ref.watch(
       submissionForChallengeProvider(
@@ -73,7 +70,9 @@ class _TalentSolutionPageState extends ConsumerState<TalentSolutionPage> {
       ),
       data: (challenge) {
         if (challenge == null) {
-          return const _PageMessage(message: 'This challenge could not be found.');
+          return const _PageMessage(
+            message: 'This challenge could not be found.',
+          );
         }
 
         return submissionAsync.when(
@@ -85,16 +84,16 @@ class _TalentSolutionPageState extends ConsumerState<TalentSolutionPage> {
             if (!_initialValuesLoaded && existingSubmission != null) {
               if (!_hasUserEdited) {
                 _solutionController.text = existingSubmission.solutionText;
-                _attachmentsController.text =
-                    existingSubmission.attachmentUrls.join('\n');
+                _attachmentsController.text = existingSubmission.attachmentUrls
+                    .join('\n');
               }
               _initialValuesLoaded = true;
             }
 
-            final alreadyReviewed = existingSubmission != null &&
-                !existingSubmission.canBeEdited;
-            final challengeAvailable = challenge.isOpen &&
-                !challenge.isPastDeadline;
+            final alreadyReviewed =
+                existingSubmission != null && !existingSubmission.canBeEdited;
+            final challengeAvailable =
+                challenge.isOpen && !challenge.isPastDeadline;
             final canEdit = !alreadyReviewed && challengeAvailable;
 
             return Form(
@@ -104,9 +103,8 @@ class _TalentSolutionPageState extends ConsumerState<TalentSolutionPage> {
                 children: [
                   Text(
                     challenge.title,
-                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
+                    style: Theme.of(context).textTheme.headlineSmall
+                        ?.copyWith(fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 8),
                   Text(challenge.description),
@@ -174,7 +172,14 @@ class _TalentSolutionPageState extends ConsumerState<TalentSolutionPage> {
                     ),
                   if (canEdit)
                     FilledButton.icon(
-                      onPressed: isSaving ? null : () => _save(context, user, challenge, existingSubmission),
+                      onPressed: isSaving
+                          ? null
+                          : () => _save(
+                              context,
+                              user,
+                              challenge,
+                              existingSubmission,
+                            ),
                       icon: isSaving
                           ? const SizedBox(
                               width: 18,
@@ -182,8 +187,22 @@ class _TalentSolutionPageState extends ConsumerState<TalentSolutionPage> {
                               child: CircularProgressIndicator(strokeWidth: 2),
                             )
                           : const Icon(Icons.send_outlined),
-                      label: Text(existingSubmission == null ? 'Submit solution' : 'Update solution'),
+                      label: Text(
+                        existingSubmission == null
+                            ? 'Submit solution'
+                            : 'Update solution',
+                      ),
                     ),
+                  if (existingSubmission != null && canEdit) ...[
+                    const SizedBox(height: 10),
+                    OutlinedButton.icon(
+                      onPressed: isSaving
+                          ? null
+                          : () => _withdraw(context, existingSubmission),
+                      icon: const Icon(Icons.delete_outline),
+                      label: const Text('Withdraw submission'),
+                    ),
+                  ],
                 ],
               ),
             );
@@ -226,7 +245,9 @@ class _TalentSolutionPageState extends ConsumerState<TalentSolutionPage> {
 
     try {
       if (existingSubmission == null) {
-        await ref.read(submissionActionsProvider.notifier).submitSolution(
+        await ref
+            .read(submissionActionsProvider.notifier)
+            .submitSolution(
               challengeId: widget.challengeId,
               talentId: user.uid,
               companyId: challenge.companyId,
@@ -234,7 +255,9 @@ class _TalentSolutionPageState extends ConsumerState<TalentSolutionPage> {
               attachmentUrls: links,
             );
       } else {
-        await ref.read(submissionActionsProvider.notifier).updateTalentSubmission(
+        await ref
+            .read(submissionActionsProvider.notifier)
+            .updateTalentSubmission(
               submission: existingSubmission,
               solutionText: _solutionController.text,
               attachmentUrls: links,
@@ -244,25 +267,70 @@ class _TalentSolutionPageState extends ConsumerState<TalentSolutionPage> {
       if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(existingSubmission == null
-              ? 'Your solution was submitted.'
-              : 'Your solution was updated.'),
+          content: Text(
+            existingSubmission == null
+                ? 'Your solution was submitted.'
+                : 'Your solution was updated.',
+          ),
         ),
       );
       Navigator.of(context).pop();
     } catch (error) {
       if (!context.mounted) return;
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(_friendlyError(error))));
+    }
+  }
+
+  Future<void> _withdraw(BuildContext context, Submission submission) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: const Text('Withdraw solution?'),
+        content: const Text(
+          'This will remove your submission from the challenge. You cannot undo this action.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext, false),
+            child: const Text('Cancel'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.pop(dialogContext, true),
+            child: const Text('Withdraw'),
+          ),
+        ],
+      ),
+    );
+    if (confirmed != true) return;
+
+    try {
+      await ref
+          .read(submissionActionsProvider.notifier)
+          .deleteSubmission(submission);
+      if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(_friendlyError(error))),
+        const SnackBar(content: Text('Your submission was withdrawn.')),
       );
+      Navigator.of(context).pop();
+    } catch (error) {
+      if (!context.mounted) return;
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(_friendlyError(error))));
     }
   }
 
   String _friendlyError(Object error) {
     final message = error.toString();
-    if (message.contains('already been submitted')) return 'You have already submitted a solution for this challenge.';
-    if (message.contains('closed') || message.contains('deadline')) return 'This challenge is no longer accepting submissions.';
-    if (message.contains('permission-denied')) return 'You are not allowed to perform this action.';
+    if (message.contains('already been submitted')) {
+      return 'You have already submitted a solution for this challenge.';
+    }
+    if (message.contains('closed') || message.contains('deadline')) {
+      return 'This challenge is no longer accepting submissions.';
+    }
+    if (message.contains('permission-denied')) {
+      return 'You are not allowed to perform this action.';
+    }
     return 'We could not save your solution. Please try again.';
   }
 }
@@ -274,11 +342,11 @@ class _PageMessage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Center(
-        child: Padding(
-          padding: const EdgeInsets.all(24),
-          child: Text(message, textAlign: TextAlign.center),
-        ),
-      );
+    child: Padding(
+      padding: const EdgeInsets.all(24),
+      child: Text(message, textAlign: TextAlign.center),
+    ),
+  );
 }
 
 class _Notice extends StatelessWidget {
