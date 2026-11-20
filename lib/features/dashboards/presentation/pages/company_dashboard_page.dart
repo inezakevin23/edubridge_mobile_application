@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../challenges/domain/entities/challenge.dart';
 import '../../../challenges/presentation/pages/company/create_challenge_page.dart';
@@ -103,6 +104,12 @@ class CompanyDashboardPage extends ConsumerWidget {
                   ),
                   icon: const Icon(Icons.manage_search),
                   label: const Text('Manage all challenges'),
+                ),
+                const SizedBox(height: 8),
+                OutlinedButton.icon(
+                  onPressed: () => context.push('/company/submissions'),
+                  icon: const Icon(Icons.inbox_outlined),
+                  label: const Text('View received submissions'),
                 ),
                 const SizedBox(height: 28),
                 Text(
