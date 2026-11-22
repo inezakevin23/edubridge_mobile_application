@@ -36,9 +36,10 @@ final profileByIdProvider = FutureProvider.family<UserProfile?, String>((
   return ref.watch(getProfileUseCaseProvider)(userId);
 });
 
-final profileStreamProvider = StreamProvider.family<UserProfile?, String>((
-  ref,
-  userId,
-) {
-  return ref.watch(watchProfileUseCaseProvider)(userId);
-});
+final profileStreamProvider =
+    StreamProvider.autoDispose.family<UserProfile?, String>((
+      ref,
+      userId,
+    ) {
+      return ref.watch(watchProfileUseCaseProvider)(userId);
+    });

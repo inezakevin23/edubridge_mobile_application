@@ -19,6 +19,9 @@ class ChallengeCard extends StatelessWidget {
     final theme = Theme.of(context);
     final date = MaterialLocalizations.of(context)
         .formatMediumDate(challenge.deadline.toLocal());
+    final tags = challenge.requiredSkills.isNotEmpty
+        ? challenge.requiredSkills
+        : challenge.requirements;
 
     return Card(
       margin: const EdgeInsets.only(bottom: 12),
@@ -26,53 +29,122 @@ class ChallengeCard extends StatelessWidget {
       child: InkWell(
         onTap: onTap,
         child: Padding(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.all(18),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Expanded(
-                    child: Text(
-                      challenge.title,
-                      style: theme.textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                  ),
+                  Flexible(child: _CategoryBadge(category: challenge.category)),
+                  const SizedBox(width: 8),
+                  _StatusBadge(challenge: challenge),
                   if (trailing != null) ...[
-                    const SizedBox(width: 8),
+                    const SizedBox(width: 4),
                     trailing!,
                   ],
                 ],
               ),
+              const SizedBox(height: 14),
+              Text(
+                challenge.title,
+                style: theme.textTheme.titleMedium?.copyWith(
+                  color: theme.colorScheme.onSurface,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
               const SizedBox(height: 8),
               Text(
-                challenge.description,
+                challenge.shortDescription.isNotEmpty
+                    ? challenge.shortDescription
+                    : challenge.description,
                 maxLines: 3,
                 overflow: TextOverflow.ellipsis,
-                style: theme.textTheme.bodyMedium,
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  color: theme.colorScheme.onSurfaceVariant,
+                  height: 1.4,
+                ),
               ),
-              const SizedBox(height: 12),
-              Wrap(
-                spacing: 8,
-                runSpacing: 8,
+              if (challenge.reward.isNotEmpty ||
+                  challenge.cashPrize.isNotEmpty) ...[
+                const SizedBox(height: 12),
+                Row(
+                  children: [
+                    Icon(
+                      Icons.workspace_premium_outlined,
+                      size: 16,
+                      color: theme.colorScheme.secondary,
+                    ),
+                    const SizedBox(width: 6),
+                    Expanded(
+                      child: Text(
+                        challenge.cashPrize.isNotEmpty
+                            ? '\$${challenge.cashPrize} cash prize'
+                            : challenge.reward,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: theme.textTheme.labelMedium?.copyWith(
+                          color: theme.colorScheme.secondary,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+              if (tags.isNotEmpty) ...[
+                const SizedBox(height: 14),
+                Wrap(
+                  spacing: 8,
+                  runSpacing: 8,
+                  children: [
+                    ...tags
+                        .take(3)
+                        .map(
+                          (requirement) => _RequirementTag(label: requirement),
+                        ),
+                    if (tags.length > 3)
+                      _RequirementTag(label: '+${tags.length - 3}'),
+                  ],
+                ),
+              ],
+              const SizedBox(height: 16),
+              Row(
                 children: [
-                  _InfoChip(
-                    icon: Icons.category_outlined,
-                    label: challenge.category,
+                  Icon(
+                    Icons.schedule_rounded,
+                    size: 16,
+                    color: theme.colorScheme.secondary,
                   ),
-                  _InfoChip(
-                    icon: Icons.calendar_month_outlined,
-                    label: 'Deadline: $date',
+                  const SizedBox(width: 6),
+                  Expanded(
+                    child: Text(
+                      'Deadline $date',
+                      style: theme.textTheme.labelMedium?.copyWith(
+                        color: theme.colorScheme.onSurfaceVariant,
+                      ),
+                    ),
                   ),
-                  _InfoChip(
-                    icon: challenge.isOpen
-                        ? Icons.lock_open
-                        : Icons.lock_outline,
-                    label: challenge.status.name.toUpperCase(),
-                  ),
+                  if (challenge.estimatedDuration.isNotEmpty) ...[
+                    Icon(
+                      Icons.timelapse_rounded,
+                      size: 16,
+                      color: theme.colorScheme.primary,
+                    ),
+                    const SizedBox(width: 5),
+                    Text(
+                      challenge.estimatedDuration,
+                      style: theme.textTheme.labelMedium?.copyWith(
+                        color: theme.colorScheme.onSurfaceVariant,
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                  ],
+                  if (onTap != null)
+                    Icon(
+                      Icons.arrow_forward_rounded,
+                      size: 18,
+                      color: theme.colorScheme.primary,
+                    ),
                 ],
               ),
             ],
@@ -83,19 +155,91 @@ class ChallengeCard extends StatelessWidget {
   }
 }
 
-class _InfoChip extends StatelessWidget {
-  const _InfoChip({required this.icon, required this.label});
+class _CategoryBadge extends StatelessWidget {
+  const _CategoryBadge({required this.category});
 
-  final IconData icon;
+  final String category;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Container(
+      constraints: const BoxConstraints(maxWidth: 180),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+      decoration: BoxDecoration(
+        color: theme.colorScheme.primary.withValues(alpha: 0.14),
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Text(
+        category,
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+        style: theme.textTheme.labelSmall?.copyWith(
+          color: theme.colorScheme.primary,
+          fontWeight: FontWeight.w600,
+        ),
+      ),
+    );
+  }
+}
+
+class _StatusBadge extends StatelessWidget {
+  const _StatusBadge({required this.challenge});
+
+  final Challenge challenge;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final color = challenge.isOpen
+        ? theme.colorScheme.secondary
+        : theme.colorScheme.onSurfaceVariant;
+    final label = challenge.isDraft
+        ? 'DRAFT'
+        : challenge.isOpen
+        ? 'OPEN'
+        : 'CLOSED';
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+      decoration: BoxDecoration(
+        color: color.withValues(alpha: 0.12),
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Text(
+        label,
+        style: theme.textTheme.labelSmall?.copyWith(
+          color: color,
+          fontWeight: FontWeight.w700,
+          letterSpacing: 0.4,
+        ),
+      ),
+    );
+  }
+}
+
+class _RequirementTag extends StatelessWidget {
+  const _RequirementTag({required this.label});
+
   final String label;
 
   @override
   Widget build(BuildContext context) {
-    return Chip(
-      visualDensity: VisualDensity.compact,
-      avatar: Icon(icon, size: 16),
-      label: Text(label, style: Theme.of(context).textTheme.labelSmall),
-      padding: EdgeInsets.zero,
+    final theme = Theme.of(context);
+    return Container(
+      constraints: const BoxConstraints(maxWidth: 220),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
+      decoration: BoxDecoration(
+        color: theme.colorScheme.surfaceContainerHighest,
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Text(
+        label,
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+        style: theme.textTheme.labelSmall?.copyWith(
+          color: theme.colorScheme.onSurfaceVariant,
+        ),
+      ),
     );
   }
 }
