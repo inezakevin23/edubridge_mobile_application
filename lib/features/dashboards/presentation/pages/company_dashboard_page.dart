@@ -112,12 +112,13 @@ class CompanyDashboardPage extends ConsumerWidget {
                     .where((item) => item.status == ChallengeStatus.open)
                     .take(4)
                     .toList();
-                if (active.isEmpty)
+                if (active.isEmpty) {
                   return _EmptyPanel(
                     message: 'No active challenges yet.',
                     action: 'Post a challenge',
                     onTap: () => context.go('/company/challenges/create'),
                   );
+                }
                 return _Panel(
                   child: Column(
                     children: [
@@ -157,10 +158,11 @@ class CompanyDashboardPage extends ConsumerWidget {
                     .where((item) => item.isShortlisted)
                     .take(2)
                     .toList();
-                if (selected.isEmpty)
+                if (selected.isEmpty) {
                   return const _EmptyPanel(
                     message: 'Shortlisted talent will appear here.',
                   );
+                }
                 return _Panel(
                   child: Column(
                     children: selected.map((item) {

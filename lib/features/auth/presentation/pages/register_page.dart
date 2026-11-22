@@ -8,7 +8,9 @@ import '../providers/auth_error_message.dart';
 import '../providers/auth_providers.dart';
 
 class RegisterPage extends ConsumerStatefulWidget {
-  const RegisterPage({super.key});
+  const RegisterPage({this.initialRole = UserRole.talent, super.key});
+
+  final UserRole initialRole;
 
   @override
   ConsumerState<RegisterPage> createState() => _RegisterPageState();
@@ -20,10 +22,16 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
   final _email = TextEditingController();
   final _password = TextEditingController();
   final _confirmPassword = TextEditingController();
-  UserRole _role = UserRole.talent;
+  late UserRole _role;
   bool _busy = false;
   bool _obscurePassword = true;
   String? _error;
+
+  @override
+  void initState() {
+    super.initState();
+    _role = widget.initialRole;
+  }
 
   @override
   void dispose() {

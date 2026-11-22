@@ -831,8 +831,9 @@ class _CreateChallengePageState extends ConsumerState<CreateChallengePage> {
                           validator: (value) {
                             final text = value?.trim() ?? '';
                             if (_isEditing && text.isEmpty) return null;
-                            if (text.isEmpty)
+                            if (text.isEmpty) {
                               return 'Enter a short description.';
+                            }
                             if (text.length < 20) {
                               return 'Use at least 20 characters.';
                             }
@@ -1143,8 +1144,9 @@ class _CreateChallengePageState extends ConsumerState<CreateChallengePage> {
                             prefixText: '\$ ',
                           ),
                           validator: (value) {
-                            if (value == null || value.trim().isEmpty)
+                            if (value == null || value.trim().isEmpty) {
                               return null;
+                            }
                             final amount = num.tryParse(value.trim());
                             return amount == null || amount < 0
                                 ? 'Enter a valid non-negative prize.'

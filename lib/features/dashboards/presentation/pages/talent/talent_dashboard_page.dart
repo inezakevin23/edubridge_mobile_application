@@ -121,6 +121,8 @@ class TalentDashboardPage extends ConsumerWidget {
     final shortlisted = submissions
         .where((submission) => submission.isShortlisted)
         .length;
+    final isLandscape =
+        MediaQuery.orientationOf(context) == Orientation.landscape;
 
     return RefreshIndicator(
       onRefresh: () async {
