@@ -9,7 +9,6 @@ import '../../features/auth/presentation/pages/landing_page.dart';
 import '../../features/auth/presentation/pages/register_page.dart';
 import '../../features/auth/presentation/pages/role_dashboard_page.dart';
 import '../../features/auth/presentation/pages/sign_in_page.dart';
-import '../../features/auth/presentation/pages/verify_email_page.dart';
 import '../../features/auth/presentation/providers/auth_providers.dart';
 import '../../features/challenges/presentation/pages/company/create_challenge_page.dart';
 import '../../features/challenges/presentation/pages/company/manage_challenges_page.dart';
@@ -19,7 +18,9 @@ import '../../features/dashboards/presentation/pages/company_dashboard_page.dart
 import '../../features/dashboards/presentation/pages/talent/talent_dashboard_page.dart';
 import '../../features/feedback/presentation/pages/company_feedback_page.dart';
 import '../../features/feedback/presentation/pages/talent_feedback_page.dart';
+import '../../features/notifications/presentation/pages/notifications_page.dart';
 import '../../features/profiles/presentation/pages/company_profile_page.dart';
+import '../../features/profiles/presentation/pages/company_talent_profile_page.dart';
 import '../../features/profiles/presentation/pages/talent_profile_page.dart';
 import '../../features/submissions/presentation/pages/company/company_submissions_page.dart';
 import '../../features/submissions/presentation/pages/company/submission_detail_page.dart';
@@ -66,30 +67,38 @@ final appRouterProvider = Provider<GoRouter>((ref) {
     redirect: (context, state) {
       final location = state.matchedLocation;
       final auth = ref.read(authStateProvider);
+      final isRegistrationPage = const {
+        '/register',
+        '/student-registration',
+        '/company-registration',
+      }.contains(location);
       final isPublicAuthPage = const {
         '/',
         '/sign-in',
+        '/login',
         '/register',
+        '/student-registration',
+        '/company-registration',
         '/forgot-password',
       }.contains(location);
+      final isPublicChallengePage =
+          location == '/challenges' || location.startsWith('/challenges/');
 
       // Do not redirect while Firebase is resolving persisted credentials.
       if (auth.isLoading && !auth.hasValue) return null;
       if (auth.hasError) {
-        return isPublicAuthPage ? null : '/sign-in';
+        return isPublicAuthPage || isPublicChallengePage ? null : '/sign-in';
       }
 
       final user = auth.value;
       if (user == null) {
-        return isPublicAuthPage ? null : '/sign-in';
+        return isPublicAuthPage || isPublicChallengePage ? null : '/sign-in';
       }
 
       if (user.requiresAccountSetup) {
-        return location == '/complete-account' ? null : '/complete-account';
-      }
-
-      if (user.requiresEmailVerification) {
-        return location == '/verify-email' ? null : '/verify-email';
+        return isRegistrationPage || location == '/complete-account'
+            ? null
+            : '/complete-account';
       }
 
       // Role-specific feature routes must be protected in the router as well
@@ -106,7 +115,6 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       }
 
       if (isPublicAuthPage ||
-          location == '/verify-email' ||
           location == '/complete-account' ||
           location == '/home') {
         return dashboardPathForRole(user.role);
@@ -120,17 +128,25 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         path: '/sign-in',
         builder: (context, state) => const SignInPage(),
       ),
+      GoRoute(path: '/login', builder: (context, state) => const SignInPage()),
       GoRoute(
         path: '/register',
-        builder: (context, state) => const RegisterPage(),
+        builder: (context, state) =>
+            const RegisterPage(initialRole: UserRole.talent),
+      ),
+      GoRoute(
+        path: '/student-registration',
+        builder: (context, state) =>
+            const RegisterPage(initialRole: UserRole.talent),
+      ),
+      GoRoute(
+        path: '/company-registration',
+        builder: (context, state) =>
+            const RegisterPage(initialRole: UserRole.company),
       ),
       GoRoute(
         path: '/forgot-password',
         builder: (context, state) => const ForgotPasswordPage(),
-      ),
-      GoRoute(
-        path: '/verify-email',
-        builder: (context, state) => const VerifyEmailPage(),
       ),
       GoRoute(
         path: '/complete-account',
@@ -158,12 +174,22 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         builder: (context, state) => const _ProfileRoute(),
       ),
       GoRoute(
+        path: '/notifications',
+        builder: (context, state) => const NotificationsPage(),
+      ),
+      GoRoute(
         path: '/talent/profile',
         builder: (context, state) => const TalentProfilePage(),
       ),
       GoRoute(
         path: '/company/profile',
         builder: (context, state) => const CompanyProfilePage(),
+      ),
+      GoRoute(
+        path: '/company/talent/:talentId',
+        builder: (context, state) => CompanyTalentProfilePage(
+          talentId: state.pathParameters['talentId']!,
+        ),
       ),
       GoRoute(
         path: '/challenges',

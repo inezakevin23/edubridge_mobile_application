@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
+import 'package:edubridge_mobile_application/core/widgets/app_back_button.dart';
+
+import '../../../../dashboards/presentation/widgets/dashboard_navigation.dart';
 import '../../../domain/entities/challenge.dart';
 import '../../providers/challenge_provider.dart';
 import '../../widgets/challenge_card.dart';
@@ -42,12 +46,12 @@ class ManageChallengesPage extends ConsumerWidget {
       context: context,
       builder: (dialogContext) => AlertDialog(
         title: Text(
-          challenge.isOpen ? 'Close challenge?' : 'Reopen challenge?',
+          challenge.isOpen ? 'Close challenge?' : 'Publish challenge?',
         ),
         content: Text(
           challenge.isOpen
               ? 'Talent will no longer be able to submit solutions to this challenge.'
-              : 'Talent will be able to see and submit solutions to this challenge again.',
+              : 'Talent will be able to see and submit solutions to this challenge.',
         ),
         actions: [
           TextButton(
@@ -56,7 +60,7 @@ class ManageChallengesPage extends ConsumerWidget {
           ),
           FilledButton(
             onPressed: () => Navigator.pop(dialogContext, true),
-            child: Text(challenge.isOpen ? 'Close challenge' : 'Reopen'),
+            child: Text(challenge.isOpen ? 'Close challenge' : 'Publish'),
           ),
         ],
       ),
@@ -72,7 +76,7 @@ class ManageChallengesPage extends ConsumerWidget {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
-            challenge.isOpen ? 'Challenge closed.' : 'Challenge reopened.',
+            challenge.isOpen ? 'Challenge closed.' : 'Challenge published.',
           ),
         ),
       );
@@ -133,7 +137,10 @@ class ManageChallengesPage extends ConsumerWidget {
     final challengesAsync = ref.watch(companyChallengesProvider(companyId));
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Manage challenges')),
+      appBar: AppBar(
+        leading: const AppBackButton(fallbackPath: '/company/dashboard'),
+        title: const Text('Manage challenges'),
+      ),
       body: challengesAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (error, _) => Center(
@@ -155,7 +162,7 @@ class ManageChallengesPage extends ConsumerWidget {
               child: Padding(
                 padding: EdgeInsets.all(28),
                 child: Text(
-                  'You have not published any challenges yet.',
+                  'You have not created any challenges yet.',
                   textAlign: TextAlign.center,
                 ),
               ),
@@ -192,7 +199,7 @@ class ManageChallengesPage extends ConsumerWidget {
                       const PopupMenuItem(value: 'edit', child: Text('Edit')),
                       PopupMenuItem(
                         value: 'toggle',
-                        child: Text(challenge.isOpen ? 'Close' : 'Reopen'),
+                        child: Text(challenge.isOpen ? 'Close' : 'Publish'),
                       ),
                       const PopupMenuItem(
                         value: 'delete',
@@ -204,6 +211,26 @@ class ManageChallengesPage extends ConsumerWidget {
               },
             ),
           );
+        },
+      ),
+      bottomNavigationBar: DashboardNavigation(
+        currentIndex: 1,
+        isCompany: true,
+        onIndexChanged: (index) {
+          switch (index) {
+            case 0:
+              context.go('/company/dashboard');
+              break;
+            case 1:
+              context.go('/company/challenges/manage');
+              break;
+            case 2:
+              context.go('/company/submissions');
+              break;
+            case 3:
+              context.go('/company/profile');
+              break;
+          }
         },
       ),
     );
