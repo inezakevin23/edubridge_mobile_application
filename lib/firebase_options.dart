@@ -69,6 +69,8 @@ class DefaultFirebaseOptions {
     messagingSenderId: '8138867535',
     projectId: 'edubridge-65fb2',
     storageBucket: 'edubridge-65fb2.firebasestorage.app',
+    androidClientId: '8138867535-tk599s4tn7cgghf3tgf1b2tbklfd57li.apps.googleusercontent.com',
+    iosClientId: '8138867535-5imp0e4dpjnj9rp5mfac480dbs2ugb28.apps.googleusercontent.com',
     iosBundleId: 'com.example.edubridgeMobileApplication',
   );
 }

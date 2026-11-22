@@ -1,0 +1,470 @@
+{
+  "projectId": "edubridge-65fb2",
+  "description": "Synthetic EduBridge demo data. Every document ID is prefixed with demo-.",
+  "documents": [
+    {
+      "collection": "profiles",
+      "id": "demo-company-01",
+      "fields": {
+        "role": "company",
+        "displayName": "Mwangaza Learning Labs",
+        "photoUrl": "",
+        "bio": "",
+        "headline": "",
+        "location": "Nairobi, Kenya",
+        "education": "",
+        "companyDescription": "Building practical digital tools that make quality learning more accessible across Africa.",
+        "industry": "Education Technology",
+        "website": "https://mwangaza.example",
+        "registrationDetails": {
+          "businessType": "Startup",
+          "city": "Nairobi",
+          "country": "Kenya",
+          "representativeName": "Demo Company Representative",
+          "representativeTitle": "Program Lead"
+        },
+        "scorePoints": 0,
+        "createdAt": { "$timestamp": "2026-11-20T09:00:00Z" },
+        "updatedAt": { "$timestamp": "2026-11-20T09:00:00Z" }
+      }
+    },
+    {
+      "collection": "profiles",
+      "id": "demo-company-02",
+      "fields": {
+        "role": "company",
+        "displayName": "GreenGrid Africa",
+        "photoUrl": "",
+        "bio": "",
+        "headline": "",
+        "location": "Kampala, Uganda",
+        "education": "",
+        "companyDescription": "Using accessible data tools to support resilient communities and sustainable agriculture.",
+        "industry": "Climate Technology",
+        "website": "https://greengrid.example",
+        "registrationDetails": {
+          "businessType": "Social Enterprise",
+          "city": "Kampala",
+          "country": "Uganda",
+          "representativeName": "Demo Company Representative",
+          "representativeTitle": "Innovation Manager"
+        },
+        "scorePoints": 0,
+        "createdAt": { "$timestamp": "2026-11-20T09:00:00Z" },
+        "updatedAt": { "$timestamp": "2026-11-20T09:00:00Z" }
+      }
+    },
+    {
+      "collection": "profiles",
+      "id": "demo-company-03",
+      "fields": {
+        "role": "company",
+        "displayName": "Tujenge Finance",
+        "photoUrl": "",
+        "bio": "",
+        "headline": "",
+        "location": "Accra, Ghana",
+        "education": "",
+        "companyDescription": "Helping small businesses make confident decisions with clear, inclusive financial tools.",
+        "industry": "Financial Technology",
+        "website": "https://tujenge.example",
+        "registrationDetails": {
+          "businessType": "Private Company",
+          "city": "Accra",
+          "country": "Ghana",
+          "representativeName": "Demo Company Representative",
+          "representativeTitle": "Product Director"
+        },
+        "scorePoints": 0,
+        "createdAt": { "$timestamp": "2026-11-20T09:00:00Z" },
+        "updatedAt": { "$timestamp": "2026-11-20T09:00:00Z" }
+      }
+    },
+    {
+      "collection": "profiles",
+      "id": "demo-talent-01",
+      "fields": {
+        "role": "talent",
+        "displayName": "Amina Njoroge",
+        "photoUrl": "",
+        "bio": "A curious software builder who enjoys turning complex problems into simple, useful products.",
+        "headline": "Computer science student and Flutter developer",
+        "location": "Nairobi, Kenya",
+        "education": "University of Nairobi",
+        "companyDescription": "",
+        "industry": "",
+        "website": "",
+        "registrationDetails": {
+          "institution": "University of Nairobi",
+          "fieldOfStudy": "Computer Science",
+          "graduationYear": "2027",
+          "currentStatus": "Student",
+          "yearsOfExperience": "1",
+          "skills": ["Flutter", "Dart", "Accessibility", "Firebase"]
+        },
+        "scorePoints": 84,
+        "createdAt": { "$timestamp": "2026-11-20T09:00:00Z" },
+        "updatedAt": { "$timestamp": "2026-11-20T09:00:00Z" }
+      }
+    },
+    {
+      "collection": "profiles",
+      "id": "demo-talent-02",
+      "fields": {
+        "role": "talent",
+        "displayName": "Kofi Mensah",
+        "photoUrl": "",
+        "bio": "A product-minded designer and developer focused on inclusive digital experiences.",
+        "headline": "Interaction design student",
+        "location": "Accra, Ghana",
+        "education": "University of Ghana",
+        "companyDescription": "",
+        "industry": "",
+        "website": "",
+        "registrationDetails": {
+          "institution": "University of Ghana",
+          "fieldOfStudy": "Information Technology",
+          "graduationYear": "2026",
+          "currentStatus": "Student",
+          "yearsOfExperience": "2",
+          "skills": ["Figma", "React", "User Research", "Prototyping"]
+        },
+        "scorePoints": 92,
+        "createdAt": { "$timestamp": "2026-11-20T09:00:00Z" },
+        "updatedAt": { "$timestamp": "2026-11-20T09:00:00Z" }
+      }
+    },
+    {
+      "collection": "profiles",
+      "id": "demo-talent-03",
+      "fields": {
+        "role": "talent",
+        "displayName": "Nia Okafor",
+        "photoUrl": "",
+        "bio": "An environmental data enthusiast who builds clear visualizations for community projects.",
+        "headline": "Data science graduate",
+        "location": "Kampala, Uganda",
+        "education": "Makerere University",
+        "companyDescription": "",
+        "industry": "",
+        "website": "",
+        "registrationDetails": {
+          "institution": "Makerere University",
+          "fieldOfStudy": "Data Science",
+          "graduationYear": "2025",
+          "currentStatus": "Graduate",
+          "yearsOfExperience": "2",
+          "skills": ["Python", "Data Visualization", "GIS", "SQL"]
+        },
+        "scorePoints": 78,
+        "createdAt": { "$timestamp": "2026-11-20T09:00:00Z" },
+        "updatedAt": { "$timestamp": "2026-11-20T09:00:00Z" }
+      }
+    },
+    {
+      "collection": "profiles",
+      "id": "demo-talent-04",
+      "fields": {
+        "role": "talent",
+        "displayName": "Daniel Ouma",
+        "photoUrl": "",
+        "bio": "A backend developer interested in reliable, low-cost tools for local businesses.",
+        "headline": "Software engineering student",
+        "location": "Kisumu, Kenya",
+        "education": "Maseno University",
+        "companyDescription": "",
+        "industry": "",
+        "website": "",
+        "registrationDetails": {
+          "institution": "Maseno University",
+          "fieldOfStudy": "Software Engineering",
+          "graduationYear": "2027",
+          "currentStatus": "Student",
+          "yearsOfExperience": "1",
+          "skills": ["Node.js", "PostgreSQL", "API Design", "Testing"]
+        },
+        "scorePoints": 71,
+        "createdAt": { "$timestamp": "2026-11-20T09:00:00Z" },
+        "updatedAt": { "$timestamp": "2026-11-20T09:00:00Z" }
+      }
+    },
+    {
+      "collection": "challenges",
+      "id": "demo-challenge-01",
+      "fields": {
+        "companyId": "demo-company-01",
+        "title": "Offline Learning Companion",
+        "shortDescription": "Design a mobile learning experience that keeps working with unreliable internet.",
+        "description": "Create a learner-first mobile concept for accessing lessons and tracking progress when connectivity is intermittent. The solution should clearly explain how content is saved, progress is synchronized, and learners recover from conflicting updates.",
+        "category": "Education Technology",
+        "estimatedDuration": "3 weeks",
+        "requiredSkills": ["Flutter", "Offline-first design", "Accessibility"],
+        "difficulty": "Intermediate",
+        "submissionFormats": ["Written Report", "Code Repository", "Slide Deck"],
+        "maxTeamSize": 3,
+        "participantStatus": "Open to students and recent graduates",
+        "accessType": "open",
+        "cashPrize": "500",
+        "requirements": ["Describe the offline user journey", "Submit a working prototype or detailed implementation plan"],
+        "eligibility": "Open to student and graduate talent across Africa",
+        "reward": "Mentorship and a certificate",
+        "deadline": { "$timestamp": "2026-12-21T23:59:00Z" },
+        "status": "open",
+        "createdAt": { "$timestamp": "2026-11-20T09:00:00Z" },
+        "updatedAt": { "$timestamp": "2026-11-20T09:00:00Z" }
+      }
+    },
+    {
+      "collection": "challenges",
+      "id": "demo-challenge-02",
+      "fields": {
+        "companyId": "demo-company-02",
+        "title": "Community Water Access Map",
+        "shortDescription": "Help local teams understand water access using clear, accessible maps.",
+        "description": "Build a lightweight map concept that helps a community organization record water points, report service interruptions, and identify areas that need follow-up. Prioritize usability on lower-end phones and explain how reports are verified.",
+        "category": "Climate Technology",
+        "estimatedDuration": "2-4 weeks",
+        "requiredSkills": ["GIS", "Data Visualization", "Mobile UX"],
+        "difficulty": "Intermediate",
+        "submissionFormats": ["Written Report", "Code Repository", "Slide Deck"],
+        "maxTeamSize": 4,
+        "participantStatus": "Open to all eligible applicants",
+        "accessType": "open",
+        "cashPrize": "350",
+        "requirements": ["Show a sample map with at least three water points", "Explain the reporting and verification workflow"],
+        "eligibility": "Open to student and graduate talent across Africa",
+        "reward": "Portfolio review and a certificate",
+        "deadline": { "$timestamp": "2026-12-15T23:59:00Z" },
+        "status": "open",
+        "createdAt": { "$timestamp": "2026-11-19T09:00:00Z" },
+        "updatedAt": { "$timestamp": "2026-11-19T09:00:00Z" }
+      }
+    },
+    {
+      "collection": "challenges",
+      "id": "demo-challenge-03",
+      "fields": {
+        "companyId": "demo-company-03",
+        "title": "Small Business Cashflow Insights",
+        "shortDescription": "Turn simple transaction records into helpful cashflow guidance.",
+        "description": "Prototype a dashboard that summarizes a small business's recent cashflow and highlights useful next steps. Use sample data only, make assumptions visible, and explain how the interface avoids presenting estimates as financial advice.",
+        "category": "Financial Technology",
+        "estimatedDuration": "3 weeks",
+        "requiredSkills": ["Data Analysis", "Dashboard Design", "Product Thinking"],
+        "difficulty": "Beginner",
+        "submissionFormats": ["Written Report", "Code Repository", "Slide Deck"],
+        "maxTeamSize": 2,
+        "participantStatus": "Open to students and recent graduates",
+        "accessType": "open",
+        "cashPrize": "400",
+        "requirements": ["Provide a sample dashboard", "Document the calculations and limitations"],
+        "eligibility": "Open to student and graduate talent across Africa",
+        "reward": "Product feedback session",
+        "deadline": { "$timestamp": "2027-01-09T23:59:00Z" },
+        "status": "open",
+        "createdAt": { "$timestamp": "2026-11-18T09:00:00Z" },
+        "updatedAt": { "$timestamp": "2026-11-18T09:00:00Z" }
+      }
+    },
+    {
+      "collection": "challenges",
+      "id": "demo-challenge-04",
+      "fields": {
+        "companyId": "demo-company-01",
+        "title": "Accessible Study Group Planner",
+        "shortDescription": "Make it easier for learners to form welcoming, focused study groups.",
+        "description": "Design a simple planning tool for students to find a study group, agree on a goal, and coordinate a session. Include accessibility considerations, a low-bandwidth option, and a way to make group expectations clear.",
+        "category": "Product Design",
+        "estimatedDuration": "2 weeks",
+        "requiredSkills": ["User Research", "Figma", "Accessibility"],
+        "difficulty": "Beginner",
+        "submissionFormats": ["Written Report", "Slide Deck"],
+        "maxTeamSize": 3,
+        "participantStatus": "Open to all eligible applicants",
+        "accessType": "open",
+        "cashPrize": "250",
+        "requirements": ["Submit a clickable prototype", "Include a short accessibility checklist"],
+        "eligibility": "Open to student and graduate talent across Africa",
+        "reward": "Mentorship and a certificate",
+        "deadline": { "$timestamp": "2027-01-16T23:59:00Z" },
+        "status": "open",
+        "createdAt": { "$timestamp": "2026-11-17T09:00:00Z" },
+        "updatedAt": { "$timestamp": "2026-11-17T09:00:00Z" }
+      }
+    },
+    {
+      "collection": "challenges",
+      "id": "demo-challenge-05",
+      "fields": {
+        "companyId": "demo-company-02",
+        "title": "Urban Crop Yield Visualizer",
+        "shortDescription": "Show small urban growers how basic records can reveal useful patterns.",
+        "description": "Create a visualization concept that helps a community garden compare planting cycles and harvest outcomes. Use a small synthetic dataset, include at least two useful comparisons, and explain how a grower can add records without specialized equipment.",
+        "category": "Data Visualization",
+        "estimatedDuration": "2-3 weeks",
+        "requiredSkills": ["Data Visualization", "JavaScript", "Communication"],
+        "difficulty": "Intermediate",
+        "submissionFormats": ["Written Report", "Code Repository", "Slide Deck"],
+        "maxTeamSize": 3,
+        "participantStatus": "Open to students and recent graduates",
+        "accessType": "open",
+        "cashPrize": "300",
+        "requirements": ["Include a visualization using synthetic data", "Explain two insights and one limitation"],
+        "eligibility": "Open to student and graduate talent across Africa",
+        "reward": "Portfolio review",
+        "deadline": { "$timestamp": "2027-01-23T23:59:00Z" },
+        "status": "open",
+        "createdAt": { "$timestamp": "2026-11-16T09:00:00Z" },
+        "updatedAt": { "$timestamp": "2026-11-16T09:00:00Z" }
+      }
+    },
+    {
+      "collection": "submissions",
+      "id": "demo-submission-01",
+      "fields": {
+        "challengeId": "demo-challenge-01",
+        "talentId": "demo-talent-01",
+        "companyId": "demo-company-01",
+        "solutionText": "The prototype caches selected lessons on the device, displays sync status, and resolves conflicts by asking learners before replacing newer progress.",
+        "attachmentUrls": ["https://example.com/demo/offline-learning"],
+        "status": "reviewed",
+        "isShortlisted": true,
+        "submittedAt": { "$timestamp": "2026-11-20T10:00:00Z" },
+        "updatedAt": { "$timestamp": "2026-11-21T13:00:00Z" },
+        "reviewedAt": { "$timestamp": "2026-11-21T13:00:00Z" }
+      }
+    },
+    {
+      "collection": "submissions",
+      "id": "demo-submission-02",
+      "fields": {
+        "challengeId": "demo-challenge-01",
+        "talentId": "demo-talent-02",
+        "companyId": "demo-company-01",
+        "solutionText": "The design uses a compact lesson library, clear download controls, and a visible progress history so students can continue learning between connections.",
+        "attachmentUrls": ["https://example.com/demo/lesson-library"],
+        "status": "under_review",
+        "isShortlisted": false,
+        "submittedAt": { "$timestamp": "2026-11-21T09:30:00Z" },
+        "updatedAt": { "$timestamp": "2026-11-21T09:30:00Z" }
+      }
+    },
+    {
+      "collection": "submissions",
+      "id": "demo-submission-03",
+      "fields": {
+        "challengeId": "demo-challenge-02",
+        "talentId": "demo-talent-03",
+        "companyId": "demo-company-02",
+        "solutionText": "The map groups verified water points by service status and lets a local coordinator review new reports before they are shown to the community.",
+        "attachmentUrls": ["https://example.com/demo/water-access-map"],
+        "status": "reviewed",
+        "isShortlisted": true,
+        "submittedAt": { "$timestamp": "2026-11-20T14:15:00Z" },
+        "updatedAt": { "$timestamp": "2026-11-21T15:00:00Z" },
+        "reviewedAt": { "$timestamp": "2026-11-21T15:00:00Z" }
+      }
+    },
+    {
+      "collection": "submissions",
+      "id": "demo-submission-04",
+      "fields": {
+        "challengeId": "demo-challenge-02",
+        "talentId": "demo-talent-04",
+        "companyId": "demo-company-02",
+        "solutionText": "The service interruption form works on a small screen, stores a draft locally, and prompts the reporter to add a location and optional notes.",
+        "attachmentUrls": [],
+        "status": "submitted",
+        "isShortlisted": false,
+        "submittedAt": { "$timestamp": "2026-11-22T08:00:00Z" },
+        "updatedAt": { "$timestamp": "2026-11-22T08:00:00Z" }
+      }
+    },
+    {
+      "collection": "submissions",
+      "id": "demo-submission-05",
+      "fields": {
+        "challengeId": "demo-challenge-03",
+        "talentId": "demo-talent-02",
+        "companyId": "demo-company-03",
+        "solutionText": "The dashboard separates observed totals from estimates and explains each calculation alongside a short, practical cashflow summary.",
+        "attachmentUrls": ["https://example.com/demo/cashflow-insights"],
+        "status": "reviewed",
+        "isShortlisted": false,
+        "submittedAt": { "$timestamp": "2026-11-21T16:30:00Z" },
+        "updatedAt": { "$timestamp": "2026-11-22T11:00:00Z" },
+        "reviewedAt": { "$timestamp": "2026-11-22T11:00:00Z" }
+      }
+    },
+    {
+      "collection": "submissions",
+      "id": "demo-submission-06",
+      "fields": {
+        "challengeId": "demo-challenge-04",
+        "talentId": "demo-talent-01",
+        "companyId": "demo-company-01",
+        "solutionText": "The study planner lets learners set a shared objective, choose an accessible meeting format, and agree on a simple group working plan.",
+        "attachmentUrls": ["https://example.com/demo/study-planner"],
+        "status": "reviewed",
+        "isShortlisted": true,
+        "submittedAt": { "$timestamp": "2026-11-22T09:00:00Z" },
+        "updatedAt": { "$timestamp": "2026-11-22T14:00:00Z" },
+        "reviewedAt": { "$timestamp": "2026-11-22T14:00:00Z" }
+      }
+    },
+    {
+      "collection": "feedback",
+      "id": "demo-submission-01",
+      "fields": {
+        "submissionId": "demo-submission-01",
+        "challengeId": "demo-challenge-01",
+        "talentId": "demo-talent-01",
+        "companyId": "demo-company-01",
+        "rating": 5,
+        "pointsAwarded": 84,
+        "cashPrizeAwarded": 500.0,
+        "summary": "A thoughtful offline-first approach with a clear learner journey.",
+        "strengths": "The sync states are easy to understand and the prototype considers learners with limited connectivity.",
+        "areasForImprovement": "Add a short test plan for resolving updates made on multiple devices.",
+        "createdAt": { "$timestamp": "2026-11-21T13:00:00Z" },
+        "updatedAt": { "$timestamp": "2026-11-21T13:00:00Z" }
+      }
+    },
+    {
+      "collection": "feedback",
+      "id": "demo-submission-03",
+      "fields": {
+        "submissionId": "demo-submission-03",
+        "challengeId": "demo-challenge-02",
+        "talentId": "demo-talent-03",
+        "companyId": "demo-company-02",
+        "rating": 4,
+        "pointsAwarded": 78,
+        "cashPrizeAwarded": 0.0,
+        "summary": "A useful mapping concept with a sensible approach to report verification.",
+        "strengths": "The status categories are clear and the interface is designed for local coordinators.",
+        "areasForImprovement": "Show how the map behaves when a location has not been recently verified.",
+        "createdAt": { "$timestamp": "2026-11-21T15:00:00Z" },
+        "updatedAt": { "$timestamp": "2026-11-21T15:00:00Z" }
+      }
+    },
+    {
+      "collection": "feedback",
+      "id": "demo-submission-05",
+      "fields": {
+        "submissionId": "demo-submission-05",
+        "challengeId": "demo-challenge-03",
+        "talentId": "demo-talent-02",
+        "companyId": "demo-company-03",
+        "rating": 4,
+        "pointsAwarded": 81,
+        "cashPrizeAwarded": 0.0,
+        "summary": "The dashboard communicates its key cashflow insights without overstating certainty.",
+        "strengths": "The calculations are documented and the distinction between recorded and estimated values is clear.",
+        "areasForImprovement": "Include a simple export option for a monthly summary.",
+        "createdAt": { "$timestamp": "2026-11-22T11:00:00Z" },
+        "updatedAt": { "$timestamp": "2026-11-22T11:00:00Z" }
+      }
+    }
+  ]
+}
