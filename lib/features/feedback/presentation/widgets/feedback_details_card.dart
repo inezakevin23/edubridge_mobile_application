@@ -36,6 +36,19 @@ class FeedbackDetailsCard extends StatelessWidget {
                 ),
               ],
             ),
+            if (feedback.cashPrizeAwarded > 0) ...[
+              const SizedBox(height: 12),
+              Row(
+                children: [
+                  const Icon(Icons.payments_outlined),
+                  const SizedBox(width: 8),
+                  Text(
+                    'Cash prize awarded: \$${feedback.cashPrizeAwarded.toStringAsFixed(2)}',
+                    style: theme.textTheme.titleSmall,
+                  ),
+                ],
+              ),
+            ],
             const SizedBox(height: 20),
             _FeedbackSection(
               title: 'Overall feedback',
