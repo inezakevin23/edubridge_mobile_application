@@ -13,6 +13,8 @@ class UserProfile {
     this.companyDescription = '',
     this.industry = '',
     this.website = '',
+    this.registrationDetails = const {},
+    this.scorePoints = 0,
     this.createdAt,
     this.updatedAt,
   });
@@ -32,6 +34,8 @@ class UserProfile {
   final String companyDescription;
   final String industry;
   final String website;
+  final Map<String, Object?> registrationDetails;
+  final int scorePoints;
 
   final DateTime? createdAt;
   final DateTime? updatedAt;
@@ -50,6 +54,8 @@ class UserProfile {
     String? companyDescription,
     String? industry,
     String? website,
+    Map<String, Object?>? registrationDetails,
+    int? scorePoints,
     DateTime? createdAt,
     DateTime? updatedAt,
   }) => UserProfile(
@@ -64,6 +70,8 @@ class UserProfile {
     companyDescription: companyDescription ?? this.companyDescription,
     industry: industry ?? this.industry,
     website: website ?? this.website,
+    registrationDetails: registrationDetails ?? this.registrationDetails,
+    scorePoints: scorePoints ?? this.scorePoints,
     createdAt: createdAt ?? this.createdAt,
     updatedAt: updatedAt ?? this.updatedAt,
   );

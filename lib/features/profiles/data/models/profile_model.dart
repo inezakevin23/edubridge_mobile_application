@@ -15,6 +15,8 @@ class ProfileModel extends UserProfile {
     super.companyDescription,
     super.industry,
     super.website,
+    super.registrationDetails,
+    super.scorePoints,
     super.createdAt,
     super.updatedAt,
   });
@@ -38,6 +40,12 @@ class ProfileModel extends UserProfile {
       companyDescription: data['companyDescription'] as String? ?? '',
       industry: data['industry'] as String? ?? '',
       website: data['website'] as String? ?? '',
+      registrationDetails: data['registrationDetails'] is Map
+          ? Map<String, Object?>.from(data['registrationDetails'] as Map)
+          : const {},
+      scorePoints: data['scorePoints'] is num
+          ? (data['scorePoints'] as num).round()
+          : 0,
       createdAt: dateOf(data['createdAt']),
       updatedAt: dateOf(data['updatedAt']),
     );
