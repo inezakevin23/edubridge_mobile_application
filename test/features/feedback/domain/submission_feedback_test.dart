@@ -23,6 +23,12 @@ void main() {
       expect(feedback.validate(), 'Points must be between 0 and 100.');
     });
 
+    test('rejects a negative cash prize', () {
+      final feedback = _validFeedback(cashPrizeAwarded: -1);
+
+      expect(feedback.validate(), 'Cash prize must be a non-negative amount.');
+    });
+
     test('requires meaningful overall feedback', () {
       final feedback = _validFeedback(summary: 'Good');
 
@@ -50,6 +56,7 @@ void main() {
 SubmissionFeedback _validFeedback({
   int rating = 4,
   int pointsAwarded = 75,
+  double cashPrizeAwarded = 0,
   String summary = 'A clear and thoughtful solution.',
 }) {
   return SubmissionFeedback(
@@ -62,6 +69,7 @@ SubmissionFeedback _validFeedback({
     summary: summary,
     strengths: 'Good analysis.',
     areasForImprovement: 'Add more testing.',
+    cashPrizeAwarded: cashPrizeAwarded,
   );
 }
 

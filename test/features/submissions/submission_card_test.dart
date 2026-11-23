@@ -5,9 +5,7 @@ import 'package:edubridge_mobile_application/features/submissions/domain/entitie
 import 'package:edubridge_mobile_application/features/submissions/presentation/widgets/submission_card.dart';
 
 void main() {
-  testWidgets('shows challenge title, status and shortlist state', (
-    tester,
-  ) async {
+  testWidgets('shows challenge title, status and shortlist state', (tester) async {
     final submission = Submission(
       id: 'challenge1_talent1',
       challengeId: 'challenge1',
