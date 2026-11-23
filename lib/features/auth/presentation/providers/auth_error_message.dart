@@ -1,5 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 
+bool isGoogleSignInCancelled(Object error) {
+  return error is FirebaseAuthException &&
+      error.code == 'google-sign-in-cancelled';
+}
+
 String authErrorMessage(Object error) {
   if (error is FirebaseAuthException) {
     switch (error.code) {

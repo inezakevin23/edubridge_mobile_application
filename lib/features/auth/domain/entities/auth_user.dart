@@ -46,5 +46,4 @@ class AuthUser {
   /// the other feature modules, but route guards must honor this flag.
   final bool requiresAccountSetup;
 
-  bool get requiresEmailVerification => email.isNotEmpty && !emailVerified;
 }

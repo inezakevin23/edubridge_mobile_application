@@ -34,7 +34,9 @@ class AuthRepositoryImpl implements AuthRepository {
   @override
   Stream<AuthUser?> authStateChanges() {
     return _source.authStateChanges().asyncMap((user) async {
-      if (user == null) return null;
+      if (user == null) {
+        return null;
+      }
       return _mapFirebaseUser(user);
     });
   }
@@ -45,6 +47,7 @@ class AuthRepositoryImpl implements AuthRepository {
     required String password,
     required UserRole role,
     required String displayName,
+    Map<String, Object?> profileDetails = const {},
   }) async {
     if (!publicRegistrationRoles.contains(role)) {
       throw ArgumentError('Only Talent and Company accounts can register.');
@@ -53,26 +56,25 @@ class AuthRepositoryImpl implements AuthRepository {
     final user = credential.user;
     if (user == null) throw StateError('Firebase did not return the new user.');
 
-    try {
-      await _source.ensureAccountDocuments(
-        user: user,
-        role: userRoleToString(role),
-        displayName: displayName,
-      );
-      await user.sendEmailVerification();
-    } catch (_) {
-      // Do not delete a newly-created Firebase account automatically. Keeping
-      // it allows account setup to be retried after a transient Firestore error.
-      rethrow;
-    }
+    await _source.ensureAccountDocuments(
+      user: user,
+      role: userRoleToString(role),
+      displayName: displayName,
+      profileDetails: profileDetails,
+    );
     return _mapFirebaseUser(user);
   }
 
   @override
-  Future<AuthUser> signIn({required String email, required String password}) async {
+  Future<AuthUser> signIn({
+    required String email,
+    required String password,
+  }) async {
     final credential = await _source.signIn(email, password);
     final user = credential.user;
-    if (user == null) throw StateError('Firebase did not return a signed-in user.');
+    if (user == null) {
+      throw StateError('Firebase did not return a signed-in user.');
+    }
     return _mapFirebaseUser(user);
   }
 
@@ -113,7 +115,9 @@ class AuthRepositoryImpl implements AuthRepository {
       throw ArgumentError('Only Talent and Company accounts can be selected.');
     }
     final user = _source.currentUser;
-    if (user == null) throw StateError('Please sign in again to complete setup.');
+    if (user == null) {
+      throw StateError('Please sign in again to complete setup.');
+    }
     final existing = await _source.getUserDocument(user.uid);
     final savedRole = existing?['role'];
     if (savedRole is String && tryParseUserRole(savedRole) == null) {
@@ -132,11 +136,6 @@ class AuthRepositoryImpl implements AuthRepository {
   Future<void> signOut() => _source.signOut();
 
   @override
-  Future<void> sendPasswordReset(String email) => _source.sendPasswordReset(email);
-
-  @override
-  Future<void> resendEmailVerification() => _source.resendEmailVerification();
-
-  @override
-  Future<bool> reloadCurrentUser() => _source.reloadCurrentUser();
+  Future<void> sendPasswordReset(String email) =>
+      _source.sendPasswordReset(email);
 }

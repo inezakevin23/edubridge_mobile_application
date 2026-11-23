@@ -40,8 +40,7 @@ final authControllerProvider = Provider<AuthController>((ref) {
 /// repair Firestore account documents. This avoids routing on a stale early
 /// auth event that arrived before account setup finished.
 Future<AuthUser?> refreshAuthState(WidgetRef ref) {
-  ref.invalidate(authStateProvider);
-  return ref.read(authStateProvider.future);
+  return ref.refresh(authStateProvider.future);
 }
 
 class AuthController {
@@ -53,12 +52,14 @@ class AuthController {
     required String password,
     required UserRole role,
     required String displayName,
+    Map<String, Object?> profileDetails = const {},
   }) {
     return _repository.register(
       email: email,
       password: password,
       role: role,
       displayName: displayName,
+      profileDetails: profileDetails,
     );
   }
 
@@ -77,11 +78,13 @@ class AuthController {
     required UserRole role,
     required String displayName,
   }) {
-    return _repository.completeAccountSetup(role: role, displayName: displayName);
+    return _repository.completeAccountSetup(
+      role: role,
+      displayName: displayName,
+    );
   }
 
   Future<void> signOut() => _repository.signOut();
-  Future<void> resetPassword(String email) => _repository.sendPasswordReset(email);
-  Future<void> resendVerification() => _repository.resendEmailVerification();
-  Future<bool> reloadCurrentUser() => _repository.reloadCurrentUser();
+  Future<void> resetPassword(String email) =>
+      _repository.sendPasswordReset(email);
 }

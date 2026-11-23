@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../core/widgets/app_back_button.dart';
 import '../../domain/entities/auth_user.dart';
 import '../providers/auth_providers.dart';
 
@@ -20,9 +21,12 @@ class RoleDashboardPage extends ConsumerWidget {
       UserRole.admin => 'Admin dashboard',
     };
     final description = switch (role) {
-      UserRole.talent => 'Browse real-world challenges, submit solutions, and track feedback.',
-      UserRole.company => 'Publish business challenges and review talent submissions.',
-      UserRole.admin => 'Administration tools will be connected by the project team.',
+      UserRole.talent =>
+        'Browse real-world challenges, submit solutions, and track feedback.',
+      UserRole.company =>
+        'Publish business challenges and review talent submissions.',
+      UserRole.admin =>
+        'Administration tools will be connected by the project team.',
     };
 
     final welcomeName = user == null || user.displayName.isEmpty
@@ -31,6 +35,7 @@ class RoleDashboardPage extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
+        leading: const AppBackButton(),
         title: Text(title),
         actions: [
           IconButton(
@@ -57,8 +62,10 @@ class RoleDashboardPage extends ConsumerWidget {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Text('Welcome$welcomeName',
-                    style: Theme.of(context).textTheme.headlineSmall),
+                Text(
+                  'Welcome$welcomeName',
+                  style: Theme.of(context).textTheme.headlineSmall,
+                ),
                 const SizedBox(height: 8),
                 Text(description),
                 const SizedBox(height: 24),
