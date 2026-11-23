@@ -13,7 +13,7 @@ class EduBridgeApp extends ConsumerWidget {
     return MaterialApp.router(
       title: 'EduBridge',
       debugShowCheckedModeBanner: false,
-      theme: AppTheme.light,
+      theme: AppTheme.dark,
       routerConfig: router,
     );
   }

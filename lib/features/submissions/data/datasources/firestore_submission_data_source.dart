@@ -6,7 +6,8 @@ class SubmissionAlreadyExistsException implements Exception {
   const SubmissionAlreadyExistsException();
 
   @override
-  String toString() => 'A solution has already been submitted for this challenge.';
+  String toString() =>
+      'A solution has already been submitted for this challenge.';
 }
 
 class SubmissionNotEditableException implements Exception {
@@ -61,9 +62,11 @@ class FirestoreSubmissionDataSource {
         .orderBy('submittedAt', descending: true)
         .limit(1)
         .snapshots()
-        .map((snapshot) => snapshot.docs.isEmpty
-            ? null
-            : SubmissionModel.fromDocument(snapshot.docs.first));
+        .map(
+          (snapshot) => snapshot.docs.isEmpty
+              ? null
+              : SubmissionModel.fromDocument(snapshot.docs.first),
+        );
   }
 
   Stream<List<SubmissionModel>> watchTalentSubmissions(String talentId) {
@@ -119,7 +122,9 @@ class FirestoreSubmissionDataSource {
       final isOpen = challenge['status'] == 'open';
       final companyId = challenge['companyId'];
 
-      if (!isOpen || deadlineDate == null || !deadlineDate.isAfter(DateTime.now())) {
+      if (!isOpen ||
+          deadlineDate == null ||
+          !deadlineDate.isAfter(DateTime.now())) {
         throw const ChallengeUnavailableForSubmissionException();
       }
       if (companyId != model.companyId) {
@@ -161,7 +166,9 @@ class FirestoreSubmissionDataSource {
       final deadlineDate = deadline is Timestamp ? deadline.toDate() : null;
 
       if (current['talentId'] != model.talentId) {
-        throw const SubmissionAccessException('You do not own this submission.');
+        throw const SubmissionAccessException(
+          'You do not own this submission.',
+        );
       }
       if (current['status'] != 'submitted') {
         throw const SubmissionNotEditableException();
@@ -204,14 +211,19 @@ class FirestoreSubmissionDataSource {
       }
 
       final currentStatus = current['status'];
-      final canStartReview = currentStatus == 'submitted' &&
+      final canStartReview =
+          currentStatus == 'submitted' &&
           (status == 'under_review' || status == 'reviewed');
-      final canFinishReview = currentStatus == 'under_review' && status == 'reviewed';
-      final canChangeShortlist = currentStatus == status &&
+      final canFinishReview =
+          currentStatus == 'under_review' && status == 'reviewed';
+      final canChangeShortlist =
+          currentStatus == status &&
           (currentStatus == 'under_review' || currentStatus == 'reviewed');
 
       if (!(canStartReview || canFinishReview || canChangeShortlist)) {
-        throw const SubmissionAccessException('This review status transition is not allowed.');
+        throw const SubmissionAccessException(
+          'This review status transition is not allowed.',
+        );
       }
 
       final updates = <String, dynamic>{
@@ -240,7 +252,9 @@ class FirestoreSubmissionDataSource {
       final current = submissionSnapshot.data()!;
 
       if (current['talentId'] != talentId) {
-        throw const SubmissionAccessException('You do not own this submission.');
+        throw const SubmissionAccessException(
+          'You do not own this submission.',
+        );
       }
       if (current['status'] != 'submitted') {
         throw const SubmissionNotEditableException();

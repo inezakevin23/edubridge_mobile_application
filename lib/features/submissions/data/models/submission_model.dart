@@ -107,7 +107,9 @@ class SubmissionModel {
   static String _requiredString(Map<String, dynamic> map, String key) {
     final value = map[key];
     if (value is! String || value.trim().isEmpty) {
-      throw FormatException('Submission field "$key" must be a non-empty string.');
+      throw FormatException(
+        'Submission field "$key" must be a non-empty string.',
+      );
     }
     return value;
   }
@@ -123,7 +125,9 @@ class SubmissionModel {
   static List<String> _stringList(Object? value) {
     if (value == null) return const [];
     if (value is! List || value.any((item) => item is! String)) {
-      throw const FormatException('Submission attachmentUrls must be a list of strings.');
+      throw const FormatException(
+        'Submission attachmentUrls must be a list of strings.',
+      );
     }
     return List<String>.unmodifiable(value.cast<String>());
   }
@@ -132,13 +136,17 @@ class SubmissionModel {
     final value = map[key];
     if (value is Timestamp) return value.toDate().toUtc();
     if (value is DateTime) return value.toUtc();
-    throw FormatException('Submission field "$key" must be a Firestore Timestamp.');
+    throw FormatException(
+      'Submission field "$key" must be a Firestore Timestamp.',
+    );
   }
 
   static DateTime? _optionalDateTime(Object? value) {
     if (value == null) return null;
     if (value is Timestamp) return value.toDate().toUtc();
     if (value is DateTime) return value.toUtc();
-    throw const FormatException('Submission reviewedAt must be a Firestore Timestamp.');
+    throw const FormatException(
+      'Submission reviewedAt must be a Firestore Timestamp.',
+    );
   }
 }

@@ -152,6 +152,12 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    _role = widget.initialRole;
+  }
+
+  @override
   void dispose() {
     _scrollController.dispose();
     _skillController.dispose();

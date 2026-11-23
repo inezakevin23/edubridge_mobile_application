@@ -32,10 +32,7 @@ class SubmissionStatusChip extends StatelessWidget {
       visualDensity: VisualDensity.compact,
       label: Text(status.label),
       backgroundColor: background,
-      labelStyle: TextStyle(
-        color: foreground,
-        fontWeight: FontWeight.w600,
-      ),
+      labelStyle: TextStyle(color: foreground, fontWeight: FontWeight.w600),
       side: BorderSide.none,
     );
   }

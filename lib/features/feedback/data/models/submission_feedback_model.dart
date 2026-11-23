@@ -12,6 +12,7 @@ class SubmissionFeedbackModel extends SubmissionFeedback {
     required super.summary,
     required super.strengths,
     required super.areasForImprovement,
+    super.cashPrizeAwarded,
     super.createdAt,
     super.updatedAt,
   });
@@ -34,6 +35,7 @@ class SubmissionFeedbackModel extends SubmissionFeedback {
       summary: (data['summary'] as String?) ?? '',
       strengths: (data['strengths'] as String?) ?? '',
       areasForImprovement: (data['areasForImprovement'] as String?) ?? '',
+      cashPrizeAwarded: (data['cashPrizeAwarded'] as num?)?.toDouble() ?? 0,
       createdAt: _readDate(data['createdAt']),
       updatedAt: _readDate(data['updatedAt']),
     );
@@ -56,6 +58,7 @@ class SubmissionFeedbackModel extends SubmissionFeedback {
       'summary': summary.trim(),
       'strengths': strengths.trim(),
       'areasForImprovement': areasForImprovement.trim(),
+      'cashPrizeAwarded': cashPrizeAwarded,
     };
   }
 }

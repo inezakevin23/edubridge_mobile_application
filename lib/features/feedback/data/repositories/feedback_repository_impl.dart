@@ -31,6 +31,7 @@ class FeedbackRepositoryImpl implements FeedbackRepository {
         summary: feedback.summary,
         strengths: feedback.strengths,
         areasForImprovement: feedback.areasForImprovement,
+        cashPrizeAwarded: feedback.cashPrizeAwarded,
         createdAt: feedback.createdAt,
         updatedAt: feedback.updatedAt,
       ),

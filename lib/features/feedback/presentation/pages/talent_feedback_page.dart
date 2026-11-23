@@ -1,3 +1,4 @@
+import 'package:edubridge_mobile_application/core/widgets/app_back_button.dart';
 import 'package:edubridge_mobile_application/features/feedback/presentation/providers/feedback_providers.dart';
 import 'package:edubridge_mobile_application/features/feedback/presentation/widgets/feedback_details_card.dart';
 import 'package:flutter/material.dart';
@@ -14,7 +15,10 @@ class TalentFeedbackPage extends ConsumerWidget {
     final feedbackAsync = ref.watch(submissionFeedbackProvider(submissionId));
 
     return Scaffold(
-      appBar: AppBar(title: const Text('My feedback')),
+      appBar: AppBar(
+        leading: const AppBackButton(fallbackPath: '/talent/submissions'),
+        title: const Text('My feedback'),
+      ),
       body: feedbackAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (error, stackTrace) => Center(

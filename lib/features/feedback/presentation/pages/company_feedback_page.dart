@@ -1,3 +1,4 @@
+import 'package:edubridge_mobile_application/core/widgets/app_back_button.dart';
 import 'package:edubridge_mobile_application/features/auth/presentation/providers/auth_providers.dart';
 import 'package:edubridge_mobile_application/features/feedback/domain/entities/submission_feedback.dart';
 import 'package:edubridge_mobile_application/features/feedback/presentation/providers/feedback_providers.dart';
@@ -28,7 +29,10 @@ class CompanyFeedbackPage extends ConsumerWidget {
     final feedbackAsync = ref.watch(submissionFeedbackProvider(submissionId));
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Give feedback')),
+      appBar: AppBar(
+        leading: const AppBackButton(fallbackPath: '/company/submissions'),
+        title: const Text('Give feedback'),
+      ),
       body: feedbackAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (error, stackTrace) => _LoadError(error: error),
@@ -73,6 +77,7 @@ class _CompanyFeedbackFormState extends ConsumerState<_CompanyFeedbackForm> {
   late final TextEditingController _strengthsController;
   late final TextEditingController _improvementsController;
   late final TextEditingController _pointsController;
+  late final TextEditingController _cashPrizeController;
   late int _rating;
   bool _isSaving = false;
 
@@ -90,6 +95,9 @@ class _CompanyFeedbackFormState extends ConsumerState<_CompanyFeedbackForm> {
     _pointsController = TextEditingController(
       text: (feedback?.pointsAwarded ?? 0).toString(),
     );
+    _cashPrizeController = TextEditingController(
+      text: feedback?.cashPrizeAwarded.toString() ?? '',
+    );
     _rating = feedback?.rating ?? 3;
   }
 
@@ -99,6 +107,7 @@ class _CompanyFeedbackFormState extends ConsumerState<_CompanyFeedbackForm> {
     _strengthsController.dispose();
     _improvementsController.dispose();
     _pointsController.dispose();
+    _cashPrizeController.dispose();
     super.dispose();
   }
 
@@ -187,6 +196,25 @@ class _CompanyFeedbackFormState extends ConsumerState<_CompanyFeedbackForm> {
                 return null;
               },
             ),
+            const SizedBox(height: 16),
+            TextFormField(
+              controller: _cashPrizeController,
+              keyboardType: const TextInputType.numberWithOptions(
+                decimal: true,
+              ),
+              decoration: const InputDecoration(
+                labelText: 'Cash prize awarded (optional)',
+                border: OutlineInputBorder(),
+              ),
+              validator: (value) {
+                final amount = double.tryParse((value ?? '').trim());
+                if ((value ?? '').trim().isNotEmpty &&
+                    (amount == null || !amount.isFinite || amount < 0)) {
+                  return 'Enter a non-negative amount.';
+                }
+                return null;
+              },
+            ),
             const SizedBox(height: 24),
             FilledButton.icon(
               onPressed: _isSaving ? null : _saveFeedback,
@@ -224,6 +252,7 @@ class _CompanyFeedbackFormState extends ConsumerState<_CompanyFeedbackForm> {
       summary: _summaryController.text.trim(),
       strengths: _strengthsController.text.trim(),
       areasForImprovement: _improvementsController.text.trim(),
+      cashPrizeAwarded: double.tryParse(_cashPrizeController.text.trim()) ?? 0,
     );
 
     setState(() => _isSaving = true);
