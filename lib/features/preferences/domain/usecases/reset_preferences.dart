@@ -1,4 +1,3 @@
-import '../entities/app_preferences.dart';
 import '../repositories/preferences_repository.dart';
 
 class ResetPreferences {

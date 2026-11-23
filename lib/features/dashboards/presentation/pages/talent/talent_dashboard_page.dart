@@ -121,6 +121,8 @@ class TalentDashboardPage extends ConsumerWidget {
     final shortlisted = submissions
         .where((submission) => submission.isShortlisted)
         .length;
+    final isLandscape =
+        MediaQuery.orientationOf(context) == Orientation.landscape;
 
     return RefreshIndicator(
       onRefresh: () async {
@@ -138,7 +140,7 @@ class TalentDashboardPage extends ConsumerWidget {
               onRetry: () => ref.invalidate(profileStreamProvider(talentId)),
             ),
           GridView.count(
-            crossAxisCount: 2,
+            crossAxisCount: isLandscape ? 4 : 2,
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
             crossAxisSpacing: 8,
