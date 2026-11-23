@@ -15,6 +15,7 @@ class DashboardHeader extends ConsumerWidget implements PreferredSizeWidget {
   final VoidCallback? onTrailingTap;
   final IconData trailingIcon;
   final bool compactScore;
+  final bool showPreferences;
   final bool showBackButton;
   final String backFallbackPath;
   final VoidCallback? onEditTap;
@@ -33,6 +34,7 @@ class DashboardHeader extends ConsumerWidget implements PreferredSizeWidget {
     this.onTrailingTap,
     this.trailingIcon = Icons.business_center_outlined,
     this.compactScore = false,
+    this.showPreferences = false,
     this.showBackButton = false,
     this.backFallbackPath = '/',
     this.onEditTap,
@@ -94,6 +96,12 @@ class DashboardHeader extends ConsumerWidget implements PreferredSizeWidget {
               ],
             ),
       actions: [
+        if (showPreferences)
+          IconButton(
+            tooltip: 'Preferences',
+            icon: const Icon(Icons.settings_outlined, color: Colors.white70),
+            onPressed: () => context.push('/preferences'),
+          ),
         Stack(
           alignment: Alignment.center,
           children: [

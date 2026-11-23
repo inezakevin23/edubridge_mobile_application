@@ -24,6 +24,7 @@ class CompanyDashboardPage extends ConsumerWidget {
     return Scaffold(
       appBar: DashboardHeader(
         notificationUserId: companyId,
+        showPreferences: true,
         trailingLabel: 'Post Challenge',
         onTrailingTap: () => context.go('/company/challenges/create'),
       ),

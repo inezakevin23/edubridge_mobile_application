@@ -6,7 +6,7 @@ enum AppThemeMode { system, light, dark }
 
 class AppPreferences {
   const AppPreferences({
-    this.themeMode = AppThemeMode.system,
+    this.themeMode = AppThemeMode.dark,
     this.challengeNotificationsEnabled = true,
     this.emailUpdatesEnabled = true,
   });

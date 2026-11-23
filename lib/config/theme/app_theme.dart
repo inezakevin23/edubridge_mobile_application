@@ -30,12 +30,91 @@ class AppTheme {
 
   static const Color primary = Color(0xFF8B5CF6);
   static const Color accent = Color(0xFFF59E0B);
+  static const Color lightPageBackground = Color(0xFFF7F7FB);
+  static const Color lightSurface = Color(0xFFFFFFFF);
+  static const Color lightText = Color(0xFF1B2130);
+  static const Color lightMutedText = Color(0xFF626B7C);
   static const Color pageBackground = Color(0xFF0B1020);
   static const Color surface = Color(0xFF131C2E);
   static const Color fieldBackground = Color(0xFF182237);
   static const Color border = Color(0xFF26334A);
   static const Color text = Color(0xFFF5F4FB);
   static const Color mutedText = Color(0xFF9A9BAD);
+
+  static ThemeData get light {
+    final colorScheme =
+        ColorScheme.fromSeed(
+          seedColor: primary,
+          brightness: Brightness.light,
+        ).copyWith(
+          primary: primary,
+          onPrimary: Colors.white,
+          secondary: accent,
+          onSecondary: lightText,
+          surface: lightSurface,
+          onSurface: lightText,
+          error: const Color(0xFFB3261E),
+        );
+
+    return ThemeData(
+      useMaterial3: true,
+      colorScheme: colorScheme,
+      scaffoldBackgroundColor: lightPageBackground,
+      canvasColor: lightPageBackground,
+      cardColor: lightSurface,
+      appBarTheme: const AppBarTheme(
+        centerTitle: false,
+        backgroundColor: lightPageBackground,
+        foregroundColor: lightText,
+        elevation: 0,
+        toolbarHeight: 56,
+      ),
+      dividerColor: const Color(0xFFE1E4EC),
+      iconTheme: const IconThemeData(color: lightMutedText),
+      textTheme: ThemeData.light().textTheme.apply(
+        bodyColor: lightText,
+        displayColor: lightText,
+      ),
+      inputDecorationTheme: InputDecorationTheme(
+        filled: true,
+        fillColor: const Color(0xFFF0F1F6),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: AppSpacing.large,
+          vertical: 14,
+        ),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(AppSpacing.controlRadius),
+          borderSide: const BorderSide(color: Color(0xFFD6DAE4)),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(AppSpacing.controlRadius),
+          borderSide: const BorderSide(color: Color(0xFFD6DAE4)),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(AppSpacing.controlRadius),
+          borderSide: const BorderSide(color: primary, width: 1.5),
+        ),
+      ),
+      filledButtonTheme: FilledButtonThemeData(
+        style: FilledButton.styleFrom(
+          minimumSize: const Size.fromHeight(AppSpacing.controlHeight),
+          backgroundColor: primary,
+          foregroundColor: Colors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(AppSpacing.controlRadius),
+          ),
+        ),
+      ),
+      cardTheme: CardThemeData(
+        color: lightSurface,
+        elevation: 0,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppSpacing.cardRadius),
+          side: const BorderSide(color: Color(0xFFE1E4EC)),
+        ),
+      ),
+    );
+  }
 
   static ThemeData get dark {
     final colorScheme =

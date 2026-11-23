@@ -84,6 +84,7 @@ class TalentDashboardPage extends ConsumerWidget {
     return Scaffold(
       appBar: DashboardHeader(
         notificationUserId: notificationUserId,
+        showPreferences: true,
         scorePoints: scorePoints,
         compactScore: true,
       ),

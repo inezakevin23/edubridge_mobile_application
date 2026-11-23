@@ -19,6 +19,7 @@ import '../../features/dashboards/presentation/pages/talent/talent_dashboard_pag
 import '../../features/feedback/presentation/pages/company_feedback_page.dart';
 import '../../features/feedback/presentation/pages/talent_feedback_page.dart';
 import '../../features/notifications/presentation/pages/notifications_page.dart';
+import '../../features/preferences/presentation/pages/preferences_page.dart';
 import '../../features/profiles/presentation/pages/company_profile_page.dart';
 import '../../features/profiles/presentation/pages/company_talent_profile_page.dart';
 import '../../features/profiles/presentation/pages/talent_profile_page.dart';
@@ -176,6 +177,10 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/notifications',
         builder: (context, state) => const NotificationsPage(),
+      ),
+      GoRoute(
+        path: '/preferences',
+        builder: (context, state) => const PreferencesPage(),
       ),
       GoRoute(
         path: '/talent/profile',
