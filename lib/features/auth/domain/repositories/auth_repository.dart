@@ -8,6 +8,7 @@ abstract class AuthRepository {
     required String password,
     required UserRole role,
     required String displayName,
+    Map<String, Object?> profileDetails = const {},
   });
 
   Future<AuthUser> signIn({required String email, required String password});
@@ -26,6 +27,4 @@ abstract class AuthRepository {
 
   Future<void> signOut();
   Future<void> sendPasswordReset(String email);
-  Future<void> resendEmailVerification();
-  Future<bool> reloadCurrentUser();
 }

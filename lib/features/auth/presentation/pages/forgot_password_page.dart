@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/utils/validators.dart';
+import '../../../../core/widgets/app_back_button.dart';
 import '../providers/auth_error_message.dart';
 import '../providers/auth_providers.dart';
 
@@ -35,8 +36,9 @@ class _ForgotPasswordPageState extends ConsumerState<ForgotPasswordPage> {
     try {
       await ref.read(authControllerProvider).resetPassword(_email.text.trim());
       if (mounted) {
-        setState(() => _message =
-            'If an account exists for this email, a password reset link has been sent.');
+        setState(
+          () => _message = 'If an account exists for this email, a password reset link has been sent.',
+        );
       }
     } catch (error) {
       if (mounted) setState(() => _error = authErrorMessage(error));
@@ -48,7 +50,10 @@ class _ForgotPasswordPageState extends ConsumerState<ForgotPasswordPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Reset password')),
+      appBar: AppBar(
+        leading: const AppBackButton(fallbackPath: '/login'),
+        title: const Text('Reset password'),
+      ),
       body: Center(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(24),
@@ -59,24 +64,40 @@ class _ForgotPasswordPageState extends ConsumerState<ForgotPasswordPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Text('Forgot your password?',
-                      style: Theme.of(context).textTheme.headlineSmall),
+                  Text(
+                    'Forgot your password?',
+                    style: Theme.of(context).textTheme.headlineSmall,
+                  ),
                   const SizedBox(height: 8),
-                  const Text('Enter your account email to receive a reset link.'),
+                  const Text(
+                    'Enter your account email to receive a reset link.',
+                  ),
                   const SizedBox(height: 20),
                   TextFormField(
                     controller: _email,
                     keyboardType: TextInputType.emailAddress,
-                    decoration: const InputDecoration(labelText: 'Email address'),
+                    decoration: const InputDecoration(
+                      labelText: 'Email address',
+                    ),
                     validator: Validators.email,
                   ),
                   if (_message != null) ...[
                     const SizedBox(height: 12),
-                    Text(_message!, style: TextStyle(color: Theme.of(context).colorScheme.primary)),
+                    Text(
+                      _message!,
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
+                    ),
                   ],
                   if (_error != null) ...[
                     const SizedBox(height: 12),
-                    Text(_error!, style: TextStyle(color: Theme.of(context).colorScheme.error)),
+                    Text(
+                      _error!,
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.error,
+                      ),
+                    ),
                   ],
                   const SizedBox(height: 20),
                   FilledButton(

@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../core/utils/validators.dart';
 import '../../domain/entities/auth_user.dart';
+import '../../../../core/widgets/app_back_button.dart';
 import '../providers/auth_error_message.dart';
 import '../providers/auth_providers.dart';
 
@@ -11,7 +12,8 @@ class CompleteAccountPage extends ConsumerStatefulWidget {
   const CompleteAccountPage({super.key});
 
   @override
-  ConsumerState<CompleteAccountPage> createState() => _CompleteAccountPageState();
+  ConsumerState<CompleteAccountPage> createState() =>
+      _CompleteAccountPageState();
 }
 
 class _CompleteAccountPageState extends ConsumerState<CompleteAccountPage> {
@@ -34,7 +36,9 @@ class _CompleteAccountPageState extends ConsumerState<CompleteAccountPage> {
       _error = null;
     });
     try {
-      await ref.read(authControllerProvider).completeAccountSetup(
+      await ref
+          .read(authControllerProvider)
+          .completeAccountSetup(
             role: _role,
             displayName: _displayName.text.trim(),
           );
@@ -51,6 +55,7 @@ class _CompleteAccountPageState extends ConsumerState<CompleteAccountPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: const AppBackButton(),
         title: const Text('Complete account setup'),
         actions: [
           TextButton(
@@ -74,8 +79,10 @@ class _CompleteAccountPageState extends ConsumerState<CompleteAccountPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Text('One more step',
-                      style: Theme.of(context).textTheme.headlineMedium),
+                  Text(
+                    'One more step',
+                    style: Theme.of(context).textTheme.headlineMedium,
+                  ),
                   const SizedBox(height: 8),
                   const Text(
                     'Your Firebase login exists, but EduBridge needs an account type '
@@ -84,29 +91,45 @@ class _CompleteAccountPageState extends ConsumerState<CompleteAccountPage> {
                   const SizedBox(height: 20),
                   SegmentedButton<UserRole>(
                     segments: const [
-                      ButtonSegment(value: UserRole.talent, label: Text('Talent')),
-                      ButtonSegment(value: UserRole.company, label: Text('Company')),
+                      ButtonSegment(
+                        value: UserRole.talent,
+                        label: Text('Talent'),
+                      ),
+                      ButtonSegment(
+                        value: UserRole.company,
+                        label: Text('Company'),
+                      ),
                     ],
                     selected: {_role},
                     onSelectionChanged: _busy
                         ? null
-                        : (selection) => setState(() => _role = selection.first),
+                        : (selection) =>
+                              setState(() => _role = selection.first),
                   ),
                   const SizedBox(height: 16),
                   TextFormField(
                     controller: _displayName,
                     textCapitalization: TextCapitalization.words,
                     decoration: InputDecoration(
-                      labelText: _role == UserRole.company ? 'Company name' : 'Full name',
+                      labelText: _role == UserRole.company
+                          ? 'Company name'
+                          : 'Full name',
                     ),
                     validator: (value) => Validators.requiredText(
                       value,
-                      label: _role == UserRole.company ? 'Company name' : 'Full name',
+                      label: _role == UserRole.company
+                          ? 'Company name'
+                          : 'Full name',
                     ),
                   ),
                   if (_error != null) ...[
                     const SizedBox(height: 12),
-                    Text(_error!, style: TextStyle(color: Theme.of(context).colorScheme.error)),
+                    Text(
+                      _error!,
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.error,
+                      ),
+                    ),
                   ],
                   const SizedBox(height: 20),
                   FilledButton(

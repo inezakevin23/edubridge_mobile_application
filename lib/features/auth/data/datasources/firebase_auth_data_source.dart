@@ -90,6 +90,7 @@ class FirebaseAuthDataSource {
     required User user,
     required String role,
     required String displayName,
+    Map<String, Object?> profileDetails = const {},
   }) async {
     final userRef = _firestore.collection('users').doc(user.uid);
     final profileRef = _firestore.collection('profiles').doc(user.uid);
@@ -133,6 +134,7 @@ class FirebaseAuthDataSource {
           'description': '',
           'industry': '',
           'website': '',
+          'registrationDetails': profileDetails,
           'createdAt': FieldValue.serverTimestamp(),
           'updatedAt': FieldValue.serverTimestamp(),
         });
@@ -160,26 +162,6 @@ class FirebaseAuthDataSource {
 
   Future<void> sendPasswordReset(String email) {
     return _auth.sendPasswordResetEmail(email: email.trim().toLowerCase());
-  }
-
-  Future<void> resendEmailVerification() async {
-    final user = _auth.currentUser;
-    if (user == null) throw StateError('No signed-in account was found.');
-    await user.reload();
-    final refreshedUser = _auth.currentUser;
-    if (refreshedUser == null) {
-      throw StateError('Please sign in again.');
-    }
-    if (!refreshedUser.emailVerified) {
-      await refreshedUser.sendEmailVerification();
-    }
-  }
-
-  Future<bool> reloadCurrentUser() async {
-    final user = _auth.currentUser;
-    if (user == null) return false;
-    await user.reload();
-    return _auth.currentUser?.emailVerified ?? false;
   }
 
   Future<void> signOut() async {
