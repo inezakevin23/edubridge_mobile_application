@@ -69,9 +69,7 @@ void main() {
           companySubmissionsProvider('company-1')
               .overrideWith((ref) => Stream.value([shortlistedSubmission])),
           profileByIdProvider('talent-1').overrideWith((ref) async => profile),
-          unreadNotificationCountProvider.overrideWith(
-            (ref, userId) => 0,
-          ),
+          unreadNotificationCountProvider.overrideWith((ref, userId) => 0),
         ],
         child: const MaterialApp(
           home: CompanyTalentProfilePage(talentId: 'talent-1'),
@@ -157,9 +155,7 @@ void main() {
           companyChallengesProvider('company-1')
               .overrideWith((ref) => Stream.value(const <Challenge>[])),
           profileByIdProvider('talent-1').overrideWith((ref) async => profile),
-          unreadNotificationCountProvider.overrideWith(
-            (ref, userId) => 0,
-          ),
+          unreadNotificationCountProvider.overrideWith((ref, userId) => 0),
         ],
         child: MaterialApp.router(routerConfig: router),
       ),

@@ -50,18 +50,16 @@ class PreferencesPage extends ConsumerWidget {
                 ),
                 const SizedBox(height: 12),
                 FilledButton(
-                  onPressed: () => ref.invalidate(preferencesControllerProvider),
+                  onPressed: () =>
+                      ref.invalidate(preferencesControllerProvider),
                   child: const Text('Try again'),
                 ),
               ],
             ),
           ),
         ),
-        data: (preferences) => _buildPreferences(
-          context,
-          preferences,
-          controller,
-        ),
+        data: (preferences) =>
+            _buildPreferences(context, preferences, controller),
       ),
     );
   }
@@ -85,10 +83,8 @@ class PreferencesPage extends ConsumerWidget {
           children: [
             ThemeModeSelector(
               value: preferences.themeMode,
-              onChanged: (value) => _runAction(
-                context,
-                () => controller.setThemeMode(value),
-              ),
+              onChanged: (value) =>
+                  _runAction(context, () => controller.setThemeMode(value)),
             ),
           ],
         ),
@@ -99,8 +95,7 @@ class PreferencesPage extends ConsumerWidget {
           children: [
             PreferenceSwitchTile(
               title: 'Challenge updates',
-              subtitle:
-                  'Allow the app to show updates about challenges and submissions.',
+              subtitle: 'Allow the app to show updates about challenges and submissions.',
               icon: Icons.notifications_active_outlined,
               value: preferences.challengeNotificationsEnabled,
               onChanged: (value) => _runAction(

@@ -45,5 +45,4 @@ class AuthUser {
   /// is missing or invalid. `role` remains non-null for compatibility with
   /// the other feature modules, but route guards must honor this flag.
   final bool requiresAccountSetup;
-
 }

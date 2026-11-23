@@ -59,8 +59,7 @@ class TalentDashboardPage extends ConsumerWidget {
             loading: () => const Center(child: CircularProgressIndicator()),
             error: (error, stackTrace) => _DashboardMessage(
               message: 'Unable to load your dashboard.',
-              onRetry: () =>
-                  ref.invalidate(talentSubmissionsProvider(user.id)),
+              onRetry: () => ref.invalidate(talentSubmissionsProvider(user.id)),
             ),
             data: (submissions) => _buildDashboard(
               context,
@@ -121,8 +120,6 @@ class TalentDashboardPage extends ConsumerWidget {
     final shortlisted = submissions
         .where((submission) => submission.isShortlisted)
         .length;
-    final isLandscape =
-        MediaQuery.orientationOf(context) == Orientation.landscape;
 
     return RefreshIndicator(
       onRefresh: () async {
@@ -140,14 +137,17 @@ class TalentDashboardPage extends ConsumerWidget {
               onRetry: () => ref.invalidate(profileStreamProvider(talentId)),
             ),
           GridView.count(
-            crossAxisCount: isLandscape ? 4 : 2,
+            crossAxisCount: 2,
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
             crossAxisSpacing: 8,
             mainAxisSpacing: 8,
             childAspectRatio: 2.15,
             children: [
-              _DashboardStat(label: 'My Submissions', value: submissions.length),
+              _DashboardStat(
+                label: 'My Submissions',
+                value: submissions.length,
+              ),
               _DashboardStat(
                 label: 'Score Points',
                 value: profileAsync.hasValue
@@ -183,7 +183,10 @@ class TalentDashboardPage extends ConsumerWidget {
                 ),
                 child: const Text(
                   'View all →',
-                  style: TextStyle(fontSize: AppTypography.caption, fontWeight: FontWeight.w700),
+                  style: TextStyle(
+                    fontSize: AppTypography.caption,
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
               ),
             ],
@@ -289,7 +292,9 @@ class _LatestChallengeCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final localizations = MaterialLocalizations.of(context);
-    final deadline = localizations.formatShortDate(challenge.deadline.toLocal());
+    final deadline = localizations.formatShortDate(
+      challenge.deadline.toLocal(),
+    );
     final prize = challenge.cashPrize.isEmpty
         ? 'No cash prize'
         : '\$${challenge.cashPrize} prize';
@@ -439,7 +444,10 @@ class _DashboardMessage extends StatelessWidget {
         Text(
           message,
           textAlign: TextAlign.center,
-          style: const TextStyle(color: Color(0xFF9A9BAD), fontSize: AppTypography.caption),
+          style: const TextStyle(
+            color: Color(0xFF9A9BAD),
+            fontSize: AppTypography.caption,
+          ),
         ),
         if (onRetry != null)
           TextButton(onPressed: onRetry, child: const Text('Try again')),

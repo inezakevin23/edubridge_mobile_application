@@ -155,7 +155,10 @@ class _SignInPageState extends ConsumerState<SignInPage> {
           const SizedBox(height: 12),
           const Text(
             'Sign in to your EduBridge account',
-            style: TextStyle(color: Color(0xFF9AA7BA), fontSize: AppTypography.title),
+            style: TextStyle(
+              color: Color(0xFF9AA7BA),
+              fontSize: AppTypography.title,
+            ),
           ),
           const SizedBox(height: 48),
           _roleToggle(),
@@ -256,7 +259,10 @@ class _SignInPageState extends ConsumerState<SignInPage> {
                 padding: EdgeInsets.symmetric(horizontal: 14),
                 child: Text(
                   'OR',
-                  style: TextStyle(color: Color(0xFF9AA7BA), fontSize: AppTypography.caption),
+                  style: TextStyle(
+                    color: Color(0xFF9AA7BA),
+                    fontSize: AppTypography.caption,
+                  ),
                 ),
               ),
               Expanded(child: Divider(color: Color(0xFF26334A))),
@@ -282,7 +288,10 @@ class _SignInPageState extends ConsumerState<SignInPage> {
             children: [
               const Text(
                 "Don't have an account? ",
-                style: TextStyle(color: Color(0xFF9AA7BA), fontSize: AppTypography.body),
+                style: TextStyle(
+                  color: Color(0xFF9AA7BA),
+                  fontSize: AppTypography.body,
+                ),
               ),
               TextButton(
                 onPressed: _busy ? null : () => context.go('/register'),
@@ -445,7 +454,10 @@ class _SignInPageState extends ConsumerState<SignInPage> {
               ),
             ),
           ),
-          style: const TextStyle(color: Colors.white, fontSize: AppTypography.title),
+          style: const TextStyle(
+            color: Colors.white,
+            fontSize: AppTypography.title,
+          ),
         ),
       ],
     );

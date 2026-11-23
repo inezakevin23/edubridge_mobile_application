@@ -770,7 +770,10 @@ class _CreateChallengePageState extends ConsumerState<CreateChallengePage> {
                 children: [
                   const Text(
                     'Challenges / Create challenge',
-                    style: TextStyle(color: Color(0xFFB69BEE), fontSize: AppTypography.micro),
+                    style: TextStyle(
+                      color: Color(0xFFB69BEE),
+                      fontSize: AppTypography.micro,
+                    ),
                   ),
                   const SizedBox(height: 8),
                   Text(
@@ -784,7 +787,10 @@ class _CreateChallengePageState extends ConsumerState<CreateChallengePage> {
                   const SizedBox(height: 4),
                   const Text(
                     'Fill in the details below to create your challenge.',
-                    style: TextStyle(color: Color(0xFF9296A6), fontSize: AppTypography.caption),
+                    style: TextStyle(
+                      color: Color(0xFF9296A6),
+                      fontSize: AppTypography.caption,
+                    ),
                   ),
                   const SizedBox(height: 12),
                   _stepSelector(),

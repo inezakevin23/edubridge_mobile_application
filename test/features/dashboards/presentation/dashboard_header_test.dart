@@ -31,9 +31,7 @@ void main() {
     await tester.pumpWidget(
       ProviderScope(
         overrides: [
-          unreadNotificationCountProvider.overrideWith(
-            (ref, userId) => 0,
-          ),
+          unreadNotificationCountProvider.overrideWith((ref, userId) => 0),
         ],
         child: const MaterialApp(
           home: Scaffold(

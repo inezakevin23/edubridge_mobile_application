@@ -109,9 +109,10 @@ class _ChallengesPageState extends ConsumerState<ChallengesPage> {
               ifAbsent: () => 1,
             );
           }
-          for (final companyId in availableChallenges
-              .map((challenge) => challenge.companyId)
-              .toSet()) {
+          for (final companyId
+              in availableChallenges
+                  .map((challenge) => challenge.companyId)
+                  .toSet()) {
             final companyProfile = ref
                 .watch(profileStreamProvider(companyId))
                 .asData
@@ -228,11 +229,8 @@ class _ChallengesPageState extends ConsumerState<ChallengesPage> {
                 const SizedBox(height: 8),
                 Text(
                   _selectedCategory == null && normalizedQuery.isEmpty
-                          ? 'Active filters: None'
-                          : 'Active filters: ${[
-                              ?_selectedCategory,
-                              if (normalizedQuery.isNotEmpty) '"$_query"',
-                            ].join(' · ')}',
+                      ? 'Active filters: None'
+                      : 'Active filters: ${[?_selectedCategory, if (normalizedQuery.isNotEmpty) '"$_query"'].join(' · ')}',
                   style: const TextStyle(
                     color: Color(0xFF85899A),
                     fontSize: AppTypography.micro,
@@ -245,7 +243,7 @@ class _ChallengesPageState extends ConsumerState<ChallengesPage> {
                     children: [
                       _CategoryFilterChip(
                         label: 'All',
-                            count: availableChallenges.length,
+                        count: availableChallenges.length,
                         selected: _selectedCategory == null,
                         onSelected: () =>
                             setState(() => _selectedCategory = null),
@@ -328,8 +326,7 @@ class _ChallengesPageState extends ConsumerState<ChallengesPage> {
                 if (availableChallenges.isEmpty)
                   const _EmptyState(
                     title: 'No open challenges yet',
-                    message:
-                        'Check back later for opportunities to demonstrate your skills.',
+                    message: 'Check back later for opportunities to demonstrate your skills.',
                   )
                 else if (filteredChallenges.isEmpty)
                   _NoResults(
@@ -381,11 +378,7 @@ class _CategoryFilterChip extends StatelessWidget {
       child: ChoiceChip(
         label: Row(
           mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(label),
-            const SizedBox(width: 4),
-            Text('$count'),
-          ],
+          children: [Text(label), const SizedBox(width: 4), Text('$count')],
         ),
         selected: selected,
         onSelected: (_) => onSelected(),
@@ -407,9 +400,8 @@ class _BrowseChallengeCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final deadline = MaterialLocalizations.of(context).formatMediumDate(
-      challenge.deadline.toLocal(),
-    );
+    final deadline = MaterialLocalizations.of(context)
+        .formatMediumDate(challenge.deadline.toLocal());
     final prize = challenge.cashPrize.trim().isNotEmpty
         ? '${challenge.cashPrize.trim()} cash prize'
         : challenge.reward.trim().isNotEmpty

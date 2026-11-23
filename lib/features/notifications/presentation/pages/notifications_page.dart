@@ -53,8 +53,7 @@ class NotificationsPage extends ConsumerWidget {
             loading: () => const Center(child: CircularProgressIndicator()),
             error: (error, stackTrace) => _NotificationMessage(
               message: 'Could not load notifications: $error',
-              onRetry: () =>
-                  ref.invalidate(userNotificationsProvider(user.id)),
+              onRetry: () => ref.invalidate(userNotificationsProvider(user.id)),
             ),
             data: (notifications) => _NotificationList(
               userId: user.id,
@@ -82,10 +81,7 @@ class NotificationsPage extends ConsumerWidget {
 }
 
 class _NotificationList extends ConsumerStatefulWidget {
-  const _NotificationList({
-    required this.userId,
-    required this.notifications,
-  });
+  const _NotificationList({required this.userId, required this.notifications});
 
   final String userId;
   final List<AppNotification> notifications;
@@ -173,9 +169,8 @@ class _NotificationListState extends ConsumerState<_NotificationList> {
   }
 
   void _showMessage(String message) {
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(SnackBar(content: Text(message)));
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text(message)));
   }
 }
 
@@ -223,11 +218,7 @@ class _NotificationTile extends StatelessWidget {
         ),
         trailing: notification.isRead
             ? null
-            : const Icon(
-                Icons.circle,
-                size: 9,
-                color: Color(0xFFF59E0B),
-              ),
+            : const Icon(Icons.circle, size: 9, color: Color(0xFFF59E0B)),
       ),
     );
   }

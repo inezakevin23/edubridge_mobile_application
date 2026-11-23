@@ -362,7 +362,10 @@ class _ProfileEditorState extends ConsumerState<ProfileEditor> {
       child: skills.isEmpty
           ? const Text(
               'Add your skills to showcase your strengths.',
-              style: TextStyle(color: Color(0xFF8F94A5), fontSize: AppTypography.caption),
+              style: TextStyle(
+                color: Color(0xFF8F94A5),
+                fontSize: AppTypography.caption,
+              ),
             )
           : Wrap(
               spacing: 6,
@@ -849,7 +852,10 @@ class _ProfileMetric extends StatelessWidget {
       children: [
         Text(
           label,
-          style: const TextStyle(color: Color(0xFF85899A), fontSize: AppTypography.micro),
+          style: const TextStyle(
+            color: Color(0xFF85899A),
+            fontSize: AppTypography.micro,
+          ),
         ),
         const SizedBox(height: 4),
         Text(
@@ -932,7 +938,10 @@ class _SkillBadge extends StatelessWidget {
       label,
       maxLines: 1,
       overflow: TextOverflow.ellipsis,
-      style: const TextStyle(color: Color(0xFFC09AFF), fontSize: AppTypography.micro),
+      style: const TextStyle(
+        color: Color(0xFFC09AFF),
+        fontSize: AppTypography.micro,
+      ),
     ),
   );
 }

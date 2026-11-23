@@ -118,9 +118,7 @@ void main() {
               ),
             ),
           ),
-          unreadNotificationCountProvider.overrideWith(
-            (ref, userId) => 0,
-          ),
+          unreadNotificationCountProvider.overrideWith((ref, userId) => 0),
         ],
         child: MaterialApp(theme: AppTheme.dark, home: const ChallengesPage()),
       ),
@@ -174,9 +172,7 @@ void main() {
     await tester.pumpWidget(
       ProviderScope(
         overrides: [
-          unreadNotificationCountProvider.overrideWith(
-            (ref, userId) => 0,
-          ),
+          unreadNotificationCountProvider.overrideWith((ref, userId) => 0),
         ],
         child: MaterialApp(
           theme: AppTheme.dark,
@@ -267,9 +263,7 @@ void main() {
         ProviderScope(
           overrides: [
             challengeActionsProvider.overrideWith(() => actions),
-            unreadNotificationCountProvider.overrideWith(
-              (ref, userId) => 0,
-            ),
+            unreadNotificationCountProvider.overrideWith((ref, userId) => 0),
           ],
           child: MaterialApp.router(theme: AppTheme.dark, routerConfig: router),
         ),
@@ -371,9 +365,7 @@ void main() {
               ),
             ),
           ),
-          unreadNotificationCountProvider.overrideWith(
-            (ref, userId) => 0,
-          ),
+          unreadNotificationCountProvider.overrideWith((ref, userId) => 0),
           profileStreamProvider('talent-1').overrideWith(
             (ref) => Stream.value(
               const UserProfile(

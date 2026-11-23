@@ -962,7 +962,10 @@ class _LandingFooter extends StatelessWidget {
                   ),
                   const Text(
                     'Built by Ineza Kevin',
-                    style: TextStyle(color: Color(0xFF6B7280), fontSize: AppTypography.body),
+                    style: TextStyle(
+                      color: Color(0xFF6B7280),
+                      fontSize: AppTypography.body,
+                    ),
                   ),
                 ],
               ),
@@ -998,47 +1001,6 @@ class _AmbientGlow extends StatelessWidget {
               stops: const [0, 0.45, 1],
             ),
           ),
-        ),
-      ),
-    );
-  }
-}
-
-class _FeatureCard extends StatelessWidget {
-  const _FeatureCard({
-    required this.icon,
-    required this.title,
-    required this.description,
-  });
-
-  final IconData icon;
-  final String title;
-  final String description;
-
-  @override
-  Widget build(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Icon(icon, color: AppTheme.primary),
-            const SizedBox(height: 12),
-            Text(
-              title,
-              style: textTheme.titleSmall?.copyWith(
-                color: AppTheme.text,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 6),
-            Text(
-              description,
-              style: textTheme.bodySmall?.copyWith(height: 1.4),
-            ),
-          ],
         ),
       ),
     );

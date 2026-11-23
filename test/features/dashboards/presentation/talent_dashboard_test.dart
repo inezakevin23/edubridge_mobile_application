@@ -67,18 +67,14 @@ void main() {
               ),
             ),
           ),
-          talentSubmissionsProvider(
-            'talent-1',
-          ).overrideWith((ref) => Stream.value([submission])),
-          profileStreamProvider(
-            'talent-1',
-          ).overrideWith((ref) => Stream.value(profile)),
+          talentSubmissionsProvider('talent-1')
+              .overrideWith((ref) => Stream.value([submission])),
+          profileStreamProvider('talent-1')
+              .overrideWith((ref) => Stream.value(profile)),
           openChallengesProvider.overrideWith(
             (ref) => Stream.value([challenge]),
           ),
-          unreadNotificationCountProvider.overrideWith(
-            (ref, userId) => 0,
-          ),
+          unreadNotificationCountProvider.overrideWith((ref, userId) => 0),
         ],
         child: MaterialApp(
           theme: AppTheme.dark,

@@ -8,8 +8,7 @@ class PreferencesRepositoryImpl implements PreferencesRepository {
   final PreferencesLocalDataSource _localDataSource;
 
   @override
-  Future<AppPreferences> load(String userId) =>
-      _localDataSource.load(userId);
+  Future<AppPreferences> load(String userId) => _localDataSource.load(userId);
 
   @override
   Future<void> save(String userId, AppPreferences preferences) =>

@@ -42,10 +42,10 @@ class AppPreferences {
 
   @override
   int get hashCode => Object.hash(
-        themeMode,
-        challengeNotificationsEnabled,
-        emailUpdatesEnabled,
-      );
+    themeMode,
+    challengeNotificationsEnabled,
+    emailUpdatesEnabled,
+  );
 }
 
 AppThemeMode appThemeModeFromStorage(String? value) {

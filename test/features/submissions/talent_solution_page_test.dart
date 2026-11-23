@@ -74,9 +74,7 @@ void main() {
             ),
           ),
           submissionActionsProvider.overrideWith(() => actions),
-          unreadNotificationCountProvider.overrideWith(
-            (ref, userId) => 0,
-          ),
+          unreadNotificationCountProvider.overrideWith((ref, userId) => 0),
         ],
         child: MaterialApp(
           theme: AppTheme.dark,

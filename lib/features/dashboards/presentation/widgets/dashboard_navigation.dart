@@ -33,9 +33,8 @@ class _DashboardNavigationState extends ConsumerState<DashboardNavigation> {
       if (mounted) context.go('/sign-in');
     } catch (error) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Could not log out: $error')),
-        );
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text('Could not log out: $error')));
       }
     } finally {
       if (mounted) setState(() => _isSigningOut = false);

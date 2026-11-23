@@ -15,10 +15,13 @@ final sharedPreferencesAsyncProvider = Provider<SharedPreferencesAsync>((ref) {
   return SharedPreferencesAsync();
 });
 
-final preferencesLocalDataSourceProvider =
-    Provider<PreferencesLocalDataSource>((ref) {
-  return PreferencesLocalDataSource(ref.watch(sharedPreferencesAsyncProvider));
-});
+final preferencesLocalDataSourceProvider = Provider<PreferencesLocalDataSource>(
+  (ref) {
+    return PreferencesLocalDataSource(
+      ref.watch(sharedPreferencesAsyncProvider),
+    );
+  },
+);
 
 final preferencesRepositoryProvider = Provider<PreferencesRepository>((ref) {
   return PreferencesRepositoryImpl(
@@ -42,8 +45,8 @@ final resetPreferencesUseCaseProvider = Provider<ResetPreferences>((ref) {
 /// auth provider also reloads settings when another account signs in.
 final preferencesControllerProvider =
     AsyncNotifierProvider<PreferencesController, AppPreferences>(
-  PreferencesController.new,
-);
+      PreferencesController.new,
+    );
 
 class PreferencesController extends AsyncNotifier<AppPreferences> {
   String? _userId;
@@ -81,16 +84,12 @@ class PreferencesController extends AsyncNotifier<AppPreferences> {
 
   Future<void> setChallengeNotificationsEnabled(bool enabled) {
     return _update(
-      (current) => current.copyWith(
-        challengeNotificationsEnabled: enabled,
-      ),
+      (current) => current.copyWith(challengeNotificationsEnabled: enabled),
     );
   }
 
   Future<void> setEmailUpdatesEnabled(bool enabled) {
-    return _update(
-      (current) => current.copyWith(emailUpdatesEnabled: enabled),
-    );
+    return _update((current) => current.copyWith(emailUpdatesEnabled: enabled));
   }
 
   Future<void> resetToDefaults() async {

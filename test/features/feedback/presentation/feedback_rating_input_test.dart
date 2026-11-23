@@ -6,12 +6,7 @@ void main() {
   testWidgets('shows the current feedback rating', (tester) async {
     await tester.pumpWidget(
       MaterialApp(
-        home: Scaffold(
-          body: FeedbackRatingInput(
-            rating: 4,
-            onChanged: (_) {},
-          ),
-        ),
+        home: Scaffold(body: FeedbackRatingInput(rating: 4, onChanged: (_) {})),
       ),
     );
 

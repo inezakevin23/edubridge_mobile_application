@@ -419,7 +419,10 @@ class _InfoRow extends StatelessWidget {
         const SizedBox(width: 8),
         Text(
           label,
-          style: const TextStyle(color: Color(0xFF8994A8), fontSize: AppTypography.caption),
+          style: const TextStyle(
+            color: Color(0xFF8994A8),
+            fontSize: AppTypography.caption,
+          ),
         ),
         const Spacer(),
         Flexible(
@@ -643,7 +646,10 @@ class _DetailTag extends StatelessWidget {
       ),
       child: Text(
         label,
-        style: const TextStyle(color: Color(0xFF9AA7BA), fontSize: AppTypography.caption),
+        style: const TextStyle(
+          color: Color(0xFF9AA7BA),
+          fontSize: AppTypography.caption,
+        ),
       ),
     );
   }

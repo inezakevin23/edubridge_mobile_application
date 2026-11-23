@@ -53,7 +53,10 @@ class CompanyDashboardPage extends ConsumerWidget {
             const SizedBox(height: 5),
             const Text(
               'Manage your challenges, review submissions, and discover top African talent.',
-              style: TextStyle(color: Color(0xFF9296A6), fontSize: AppTypography.caption),
+              style: TextStyle(
+                color: Color(0xFF9296A6),
+                fontSize: AppTypography.caption,
+              ),
             ),
             const SizedBox(height: 14),
             challenges.when(
@@ -231,7 +234,10 @@ class _Stat extends StatelessWidget {
           label,
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
-          style: const TextStyle(color: Color(0xFF85899A), fontSize: AppTypography.micro),
+          style: const TextStyle(
+            color: Color(0xFF85899A),
+            fontSize: AppTypography.micro,
+          ),
         ),
       ],
     ),
@@ -266,7 +272,10 @@ class _SectionHeading extends StatelessWidget {
           padding: const EdgeInsets.all(5),
           tapTargetSize: MaterialTapTargetSize.shrinkWrap,
         ),
-        child: Text(action, style: const TextStyle(fontSize: AppTypography.micro)),
+        child: Text(
+          action,
+          style: const TextStyle(fontSize: AppTypography.micro),
+        ),
       ),
     ],
   );
@@ -328,7 +337,10 @@ class _ChallengeTile extends StatelessWidget {
           const SizedBox(height: 4),
           Text(
             challenge.category,
-            style: const TextStyle(color: Color(0xFF898D9D), fontSize: AppTypography.micro),
+            style: const TextStyle(
+              color: Color(0xFF898D9D),
+              fontSize: AppTypography.micro,
+            ),
           ),
           const SizedBox(height: 7),
           Row(
@@ -337,12 +349,18 @@ class _ChallengeTile extends StatelessWidget {
               const SizedBox(width: 4),
               Text(
                 'Due ${MaterialLocalizations.of(context).formatShortDate(challenge.deadline.toLocal())}',
-                style: const TextStyle(color: Color(0xFF888C9B), fontSize: AppTypography.micro),
+                style: const TextStyle(
+                  color: Color(0xFF888C9B),
+                  fontSize: AppTypography.micro,
+                ),
               ),
               const Spacer(),
               Text(
                 challenge.status.value,
-                style: const TextStyle(color: Color(0xFFC49CFF), fontSize: AppTypography.micro),
+                style: const TextStyle(
+                  color: Color(0xFFC49CFF),
+                  fontSize: AppTypography.micro,
+                ),
               ),
             ],
           ),
@@ -382,7 +400,10 @@ class _SubmissionTile extends StatelessWidget {
       ),
       subtitle: Text(
         'Shortlisted · ${submission.status.label}',
-        style: const TextStyle(color: Color(0xFF898D9D), fontSize: AppTypography.micro),
+        style: const TextStyle(
+          color: Color(0xFF898D9D),
+          fontSize: AppTypography.micro,
+        ),
       ),
       trailing: const Icon(
         Icons.arrow_forward_ios,
@@ -404,12 +425,18 @@ class _EmptyPanel extends StatelessWidget {
       children: [
         Text(
           message,
-          style: const TextStyle(color: Color(0xFF9296A6), fontSize: AppTypography.caption),
+          style: const TextStyle(
+            color: Color(0xFF9296A6),
+            fontSize: AppTypography.caption,
+          ),
         ),
         if (action != null)
           TextButton(
             onPressed: onTap,
-            child: Text(action!, style: const TextStyle(fontSize: AppTypography.caption)),
+            child: Text(
+              action!,
+              style: const TextStyle(fontSize: AppTypography.caption),
+            ),
           ),
       ],
     ),
@@ -445,7 +472,10 @@ class _RetryMessage extends StatelessWidget {
     children: [
       Text(
         message,
-        style: const TextStyle(color: Color(0xFF9296A6), fontSize: AppTypography.caption),
+        style: const TextStyle(
+          color: Color(0xFF9296A6),
+          fontSize: AppTypography.caption,
+        ),
       ),
       TextButton(onPressed: onRetry, child: const Text('Retry')),
     ],

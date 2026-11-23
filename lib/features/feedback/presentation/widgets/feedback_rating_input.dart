@@ -31,10 +31,7 @@ class FeedbackRatingInput extends StatelessWidget {
         ),
         const Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text('Needs improvement'),
-            Text('Excellent'),
-          ],
+          children: [Text('Needs improvement'), Text('Excellent')],
         ),
       ],
     );

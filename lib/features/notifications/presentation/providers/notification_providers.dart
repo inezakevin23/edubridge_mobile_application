@@ -5,19 +5,17 @@ import '../../../submissions/domain/entities/submission.dart';
 import '../../data/datasources/firestore_notification_data_source.dart';
 import '../../domain/entities/app_notification.dart';
 
-typedef NotifyShortlistedSubmissions =
-    Future<int> Function({
-      required String companyId,
-      required List<Submission> submissions,
-    });
+typedef NotifyShortlistedSubmissions = Future<int> Function({
+  required String companyId,
+  required List<Submission> submissions,
+});
 
 typedef MarkNotificationRead = Future<void> Function(String notificationId);
 
-typedef MarkAllNotificationsRead =
-    Future<void> Function({
-      required String userId,
-      required List<AppNotification> notifications,
-    });
+typedef MarkAllNotificationsRead = Future<void> Function({
+  required String userId,
+  required List<AppNotification> notifications,
+});
 
 final firestoreNotificationDataSourceProvider =
     Provider<FirestoreNotificationDataSource>((ref) {
@@ -45,11 +43,8 @@ final unreadNotificationCountProvider = Provider.family<int, String>((
 final notifyShortlistedSubmissionsProvider =
     Provider<NotifyShortlistedSubmissions>((ref) {
       final dataSource = ref.watch(firestoreNotificationDataSourceProvider);
-      return ({required companyId, required submissions}) =>
-          dataSource.notifyShortlisted(
-            companyId: companyId,
-            submissions: submissions,
-          );
+      return ({required companyId, required submissions}) => dataSource
+          .notifyShortlisted(companyId: companyId, submissions: submissions);
     });
 
 final markNotificationReadProvider = Provider<MarkNotificationRead>((ref) {
@@ -57,14 +52,10 @@ final markNotificationReadProvider = Provider<MarkNotificationRead>((ref) {
   return dataSource.markAsRead;
 });
 
-final markAllNotificationsReadProvider =
-    Provider<MarkAllNotificationsRead>((ref) {
-      final dataSource = ref.watch(firestoreNotificationDataSourceProvider);
-      return ({
-        required userId,
-        required notifications,
-      }) => dataSource.markAllAsRead(
-        userId: userId,
-        notifications: notifications,
-      );
-    });
+final markAllNotificationsReadProvider = Provider<MarkAllNotificationsRead>((
+  ref,
+) {
+  final dataSource = ref.watch(firestoreNotificationDataSourceProvider);
+  return ({required userId, required notifications}) =>
+      dataSource.markAllAsRead(userId: userId, notifications: notifications);
+});

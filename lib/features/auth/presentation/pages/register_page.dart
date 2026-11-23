@@ -152,12 +152,6 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
   }
 
   @override
-  void initState() {
-    super.initState();
-    _role = widget.initialRole;
-  }
-
-  @override
   void dispose() {
     _scrollController.dispose();
     _skillController.dispose();
@@ -570,7 +564,10 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
             _isCompany
                 ? 'Registering as a student? '
                 : 'Registering a company? ',
-            style: const TextStyle(color: Color(0xFFAAB4C3), fontSize: AppTypography.body),
+            style: const TextStyle(
+              color: Color(0xFFAAB4C3),
+              fontSize: AppTypography.body,
+            ),
           ),
           InkWell(
             onTap: () => context.go(
@@ -587,7 +584,10 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
           ),
           const Text(
             '  ·  Already have an account? ',
-            style: TextStyle(color: Color(0xFFAAB4C3), fontSize: AppTypography.body),
+            style: TextStyle(
+              color: Color(0xFFAAB4C3),
+              fontSize: AppTypography.body,
+            ),
           ),
           InkWell(
             onTap: () => context.go('/login'),
@@ -616,7 +616,10 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
       children: [
         Text(
           '$prompt ',
-          style: const TextStyle(color: Color(0xFF8D99AE), fontSize: AppTypography.caption),
+          style: const TextStyle(
+            color: Color(0xFF8D99AE),
+            fontSize: AppTypography.caption,
+          ),
         ),
         InkWell(
           onTap: () => context.go(route),
@@ -753,7 +756,10 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
           const Text(
             'Account activation takes up to 48 hours after document verification.',
             textAlign: TextAlign.center,
-            style: TextStyle(color: Color(0xFF8D99AE), fontSize: AppTypography.caption),
+            style: TextStyle(
+              color: Color(0xFF8D99AE),
+              fontSize: AppTypography.caption,
+            ),
           ),
         ],
       ],
@@ -1080,7 +1086,10 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
                   padding: EdgeInsets.only(top: 10),
                   child: Text(
                     'Add at least one skill to continue.',
-                    style: TextStyle(color: Color(0xFFF43F5E), fontSize: AppTypography.caption),
+                    style: TextStyle(
+                      color: Color(0xFFF43F5E),
+                      fontSize: AppTypography.caption,
+                    ),
                   ),
                 ),
             ],
@@ -1113,7 +1122,10 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
         const Text(
           'By registering, you agree to our Terms of Service and Privacy Policy.',
           textAlign: TextAlign.center,
-          style: TextStyle(color: Color(0xFF8D99AE), fontSize: AppTypography.caption),
+          style: TextStyle(
+            color: Color(0xFF8D99AE),
+            fontSize: AppTypography.caption,
+          ),
         ),
       ],
     );
@@ -1339,7 +1351,10 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
           maxLength: maxLength,
           validator: validator,
           textCapitalization: TextCapitalization.sentences,
-          style: const TextStyle(color: Colors.white, fontSize: AppTypography.body),
+          style: const TextStyle(
+            color: Colors.white,
+            fontSize: AppTypography.body,
+          ),
           decoration: _inputDecoration(
             hint: hint,
             icon: icon,
@@ -1374,11 +1389,17 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
           isExpanded: true,
           icon: const Icon(Icons.keyboard_arrow_down_rounded),
           dropdownColor: const Color(0xFF182237),
-          style: const TextStyle(color: Colors.white, fontSize: AppTypography.body),
+          style: const TextStyle(
+            color: Colors.white,
+            fontSize: AppTypography.body,
+          ),
           decoration: _inputDecoration(icon: icon),
           hint: Text(
             hint,
-            style: const TextStyle(color: Color(0xFF8E9AAF), fontSize: AppTypography.body),
+            style: const TextStyle(
+              color: Color(0xFF8E9AAF),
+              fontSize: AppTypography.body,
+            ),
           ),
           items: options
               .map(
@@ -1428,8 +1449,14 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
         borderRadius: BorderRadius.circular(22),
         borderSide: const BorderSide(color: Color(0xFFF43F5E), width: 1.3),
       ),
-      hintStyle: const TextStyle(color: Color(0xFF8E9AAF), fontSize: AppTypography.body),
-      counterStyle: const TextStyle(color: Color(0xFF8D99AE), fontSize: AppTypography.caption),
+      hintStyle: const TextStyle(
+        color: Color(0xFF8E9AAF),
+        fontSize: AppTypography.body,
+      ),
+      counterStyle: const TextStyle(
+        color: Color(0xFF8D99AE),
+        fontSize: AppTypography.caption,
+      ),
     );
   }
 
@@ -1464,7 +1491,10 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
         elevation: 3,
         shadowColor: _accent.withValues(alpha: 0.35),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
-        textStyle: const TextStyle(fontSize: AppTypography.body, fontWeight: FontWeight.w700),
+        textStyle: const TextStyle(
+          fontSize: AppTypography.body,
+          fontWeight: FontWeight.w700,
+        ),
       ),
     );
 
@@ -1541,7 +1571,10 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
           padding: EdgeInsets.symmetric(horizontal: 14),
           child: Text(
             'OR',
-            style: TextStyle(color: Color(0xFF9AA7BA), fontSize: AppTypography.caption),
+            style: TextStyle(
+              color: Color(0xFF9AA7BA),
+              fontSize: AppTypography.caption,
+            ),
           ),
         ),
         Expanded(child: Divider(color: Color(0xFF26334A))),
@@ -1583,7 +1616,10 @@ class _FieldLabel extends StatelessWidget {
               padding: EdgeInsets.only(left: 5),
               child: Text(
                 '(Optional)',
-                style: TextStyle(color: Color(0xFF8D99AE), fontSize: AppTypography.caption),
+                style: TextStyle(
+                  color: Color(0xFF8D99AE),
+                  fontSize: AppTypography.caption,
+                ),
               ),
             ),
         ],

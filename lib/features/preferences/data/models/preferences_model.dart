@@ -15,8 +15,7 @@ class PreferencesModel {
   factory PreferencesModel.fromEntity(AppPreferences preferences) {
     return PreferencesModel(
       themeMode: preferences.themeMode.name,
-      challengeNotificationsEnabled:
-          preferences.challengeNotificationsEnabled,
+      challengeNotificationsEnabled: preferences.challengeNotificationsEnabled,
       emailUpdatesEnabled: preferences.emailUpdatesEnabled,
     );
   }

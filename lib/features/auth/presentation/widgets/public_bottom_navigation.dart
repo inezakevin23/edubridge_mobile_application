@@ -2,7 +2,6 @@ import 'package:edubridge_mobile_application/config/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-
 class PublicBottomNavigation extends StatelessWidget {
   const PublicBottomNavigation({required this.selectedIndex, super.key});
 

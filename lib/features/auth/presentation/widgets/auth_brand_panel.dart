@@ -1,7 +1,6 @@
 import 'package:edubridge_mobile_application/config/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 
-
 class AuthBrandPanel extends StatelessWidget {
   const AuthBrandPanel({
     super.key,
